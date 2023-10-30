@@ -1,0 +1,68 @@
+h1 {
+  text-align: center;
+  padding: 10px;
+  color: mediumvioletred;
+}
+
+h2 {
+  margin-left: 2%;
+  padding:6px;
+  color: maroon;
+}
+
+h3 {
+  margin-left: 2%;
+  padding:4px;
+  color: indigo;
+}
+
+.frame {
+  padding: 15px;
+  background-color: whitesmoke;
+  border-radius: 7px;
+}
+
+.form {
+  margin-left:5%;
+  margin-right:6%;
+  padding: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  background-color: whitesmoke;
+  border: solid thin gainsboro;
+}
+
+.section {
+  margin-left: 8%;
+  margin-right: 8%;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.btn {
+  padding: 6px;
+  border-radius: 6px;
+  height: 32px;
+}
+
+.form-row {
+  margin-top: 5px;
+  margin-bottom: 4px;
+}
+.form-control {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 3px;
+  border-radius: 6px;
+}
+
+.message {
+  text-align: center;
+  padding: 5px;
+  font-size: 16pt;
+}
+
+a:link, a:visited {
+  color: dodgerblue;
+  text-decoration: none;
+}

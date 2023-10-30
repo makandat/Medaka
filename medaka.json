@@ -1,0 +1,6 @@
+{
+  "html":"./html",
+  "templates":"./templates",
+  "upload":"./upload",
+  "cgi-bin":"./cgi-bin"
+}

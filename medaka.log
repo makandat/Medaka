@@ -1,0 +1,991 @@
+I, [2023-10-27T17:09:28] -- medaka: D=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T17:21:19] -- medaka: Start medaka server ...
+I, [2023-10-27T17:21:30] -- medaka: get_cookie
+I, [2023-10-27T17:21:42] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T17:21:53] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T17:22:02] -- medaka: accept:text/html
+I, [2023-10-27T17:22:14] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T17:22:17] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T17:22:35] -- medaka: accept:image/avif
+I, [2023-10-27T17:22:38] -- medaka: accept:image/webp
+I, [2023-10-27T17:22:39] -- medaka: accept:image/apng
+I, [2023-10-27T17:22:40] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T17:22:41] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T17:22:42] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T17:22:53] -- medaka: Start medaka server ...
+I, [2023-10-27T17:22:57] -- medaka: get_cookie
+I, [2023-10-27T17:22:57] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T17:22:57] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T17:22:57] -- medaka: accept:text/html
+I, [2023-10-27T17:22:57] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T17:22:57] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T17:22:57] -- medaka: accept:image/avif
+I, [2023-10-27T17:22:57] -- medaka: accept:image/webp
+I, [2023-10-27T17:22:57] -- medaka: accept:image/apng
+I, [2023-10-27T17:22:57] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T17:22:57] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T17:22:57] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T17:22:57] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T17:22:57] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T17:22:57] -- medaka: accept-language:en-US
+I, [2023-10-27T17:22:57] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T17:22:57] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T17:22:57] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T17:22:57] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T17:22:57] -- medaka: host:localhost:2024
+I, [2023-10-27T17:22:57] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T17:22:57] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T17:22:57] -- medaka: connection:keep-alive
+I, [2023-10-27T17:22:57] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T17:22:57] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T17:22:57] -- medaka: cache-control:max-age=0
+I, [2023-10-27T17:22:57] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T17:22:57] -- medaka: accept-encoding:gzip
+I, [2023-10-27T17:22:57] -- medaka: accept-encoding:deflate
+I, [2023-10-27T17:22:57] -- medaka: accept-encoding:br
+I, [2023-10-27T17:22:57] -- medaka: cookie:a=AAA
+I, [2023-10-27T17:22:57] -- medaka: 
+I, [2023-10-27T17:23:36] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T18:29:34] -- medaka: Start medaka server ...
+I, [2023-10-27T18:29:39] -- medaka: get_cookie
+I, [2023-10-27T18:29:39] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T18:29:39] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T18:29:39] -- medaka: accept:text/html
+I, [2023-10-27T18:29:39] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T18:29:39] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T18:29:39] -- medaka: accept:image/avif
+I, [2023-10-27T18:29:39] -- medaka: accept:image/webp
+I, [2023-10-27T18:29:39] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T18:29:39] -- medaka: accept-language:ja
+I, [2023-10-27T18:29:39] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T18:29:39] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T18:29:39] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T18:29:39] -- medaka: dnt:1
+I, [2023-10-27T18:29:39] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T18:29:39] -- medaka: host:localhost:2024
+I, [2023-10-27T18:29:39] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T18:29:39] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T18:29:39] -- medaka: connection:keep-alive
+I, [2023-10-27T18:29:39] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T18:29:39] -- medaka: accept-encoding:gzip
+I, [2023-10-27T18:29:39] -- medaka: accept-encoding:deflate
+I, [2023-10-27T18:29:39] -- medaka: accept-encoding:br
+I, [2023-10-27T18:29:39] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T18:29:39] -- medaka: D=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T18:29:41] -- medaka: get_cookie
+I, [2023-10-27T18:29:41] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T18:29:41] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T18:29:41] -- medaka: accept:text/html
+I, [2023-10-27T18:29:41] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T18:29:41] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T18:29:41] -- medaka: accept:image/avif
+I, [2023-10-27T18:29:41] -- medaka: accept:image/webp
+I, [2023-10-27T18:29:41] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T18:29:41] -- medaka: accept-language:ja
+I, [2023-10-27T18:29:41] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T18:29:41] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T18:29:41] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T18:29:41] -- medaka: dnt:1
+I, [2023-10-27T18:29:41] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T18:29:41] -- medaka: host:localhost:2024
+I, [2023-10-27T18:29:41] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T18:29:41] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T18:29:41] -- medaka: connection:keep-alive
+I, [2023-10-27T18:29:41] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T18:29:41] -- medaka: accept-encoding:gzip
+I, [2023-10-27T18:29:41] -- medaka: accept-encoding:deflate
+I, [2023-10-27T18:29:41] -- medaka: accept-encoding:br
+I, [2023-10-27T18:29:41] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T18:29:41] -- medaka: D=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T18:30:27] -- medaka: get_cookie
+I, [2023-10-27T18:30:27] -- medaka: accept:*/*
+I, [2023-10-27T18:30:27] -- medaka: host:localhost:2024
+I, [2023-10-27T18:30:27] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T18:30:33] -- medaka: get_cookie
+I, [2023-10-27T18:30:33] -- medaka: accept:*/*
+I, [2023-10-27T18:30:33] -- medaka: host:localhost:2024
+I, [2023-10-27T18:30:33] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T18:31:07] -- medaka: Start medaka server ...
+I, [2023-10-27T18:31:11] -- medaka: get_cookie
+I, [2023-10-27T18:31:11] -- medaka: accept:*/*
+I, [2023-10-27T18:31:11] -- medaka: host:localhost:2024
+I, [2023-10-27T18:31:11] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T18:31:24] -- medaka: get_cookie
+I, [2023-10-27T18:31:24] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T18:31:24] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T18:31:24] -- medaka: accept:text/html
+I, [2023-10-27T18:31:24] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T18:31:24] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T18:31:24] -- medaka: accept:image/avif
+I, [2023-10-27T18:31:24] -- medaka: accept:image/webp
+I, [2023-10-27T18:31:24] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T18:31:24] -- medaka: accept-language:ja
+I, [2023-10-27T18:31:24] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T18:31:24] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T18:31:24] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T18:31:24] -- medaka: dnt:1
+I, [2023-10-27T18:31:24] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T18:31:24] -- medaka: host:localhost:2024
+I, [2023-10-27T18:31:24] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T18:31:24] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T18:31:24] -- medaka: connection:keep-alive
+I, [2023-10-27T18:31:24] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T18:31:24] -- medaka: accept-encoding:gzip
+I, [2023-10-27T18:31:24] -- medaka: accept-encoding:deflate
+I, [2023-10-27T18:31:24] -- medaka: accept-encoding:br
+I, [2023-10-27T18:31:24] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T18:31:24] -- medaka: D=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T18:31:29] -- medaka: get_cookie
+I, [2023-10-27T18:31:29] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T18:31:29] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T18:31:29] -- medaka: accept:text/html
+I, [2023-10-27T18:31:29] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T18:31:29] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T18:31:29] -- medaka: accept:image/avif
+I, [2023-10-27T18:31:29] -- medaka: accept:image/webp
+I, [2023-10-27T18:31:29] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T18:31:29] -- medaka: accept-language:ja
+I, [2023-10-27T18:31:29] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T18:31:29] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T18:31:29] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T18:31:29] -- medaka: dnt:1
+I, [2023-10-27T18:31:29] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T18:31:29] -- medaka: host:localhost:2024
+I, [2023-10-27T18:31:29] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T18:31:29] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T18:31:29] -- medaka: connection:keep-alive
+I, [2023-10-27T18:31:29] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T18:31:29] -- medaka: accept-encoding:gzip
+I, [2023-10-27T18:31:29] -- medaka: accept-encoding:deflate
+I, [2023-10-27T18:31:29] -- medaka: accept-encoding:br
+I, [2023-10-27T18:31:29] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T18:31:29] -- medaka: D=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T18:58:19] -- medaka: Start medaka server ...
+I, [2023-10-27T18:58:39] -- medaka: get_cookie
+I, [2023-10-27T18:58:39] -- medaka: accept:*/*
+I, [2023-10-27T18:58:39] -- medaka: host:localhost:2024
+I, [2023-10-27T18:58:39] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T18:59:46] -- medaka: get_cookie
+I, [2023-10-27T18:59:46] -- medaka: accept:*/*
+I, [2023-10-27T18:59:46] -- medaka: host:localhost:2024
+I, [2023-10-27T18:59:46] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T18:59:46] -- medaka: cookie:a=A
+I, [2023-10-27T18:59:46] -- medaka: 
+I, [2023-10-27T19:05:37] -- medaka: get_cookie
+I, [2023-10-27T19:05:37] -- medaka: accept:*/*
+I, [2023-10-27T19:05:37] -- medaka: host:localhost:2024
+I, [2023-10-27T19:05:37] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T19:06:06] -- medaka: get_cookie
+I, [2023-10-27T19:06:06] -- medaka: accept:*/*
+I, [2023-10-27T19:06:06] -- medaka: host:localhost:2024
+I, [2023-10-27T19:06:06] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T19:06:06] -- medaka: cookie:a=A
+I, [2023-10-27T19:06:06] -- medaka: 
+I, [2023-10-27T19:09:27] -- medaka: Start medaka server ...
+I, [2023-10-27T19:09:36] -- medaka: get_cookie
+I, [2023-10-27T19:09:36] -- medaka: accept:*/*
+I, [2023-10-27T19:09:36] -- medaka: host:localhost:2024
+I, [2023-10-27T19:09:36] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T19:09:47] -- medaka: get_cookie
+I, [2023-10-27T19:09:47] -- medaka: accept:*/*
+I, [2023-10-27T19:09:47] -- medaka: host:localhost:2024
+I, [2023-10-27T19:09:47] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T19:09:47] -- medaka: cookie:a=A
+I, [2023-10-27T19:09:47] -- medaka: 
+I, [2023-10-27T19:10:34] -- medaka: get_cookie
+I, [2023-10-27T19:10:34] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:10:34] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:10:34] -- medaka: accept:text/html
+I, [2023-10-27T19:10:34] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:10:34] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:10:34] -- medaka: accept:image/avif
+I, [2023-10-27T19:10:34] -- medaka: accept:image/webp
+I, [2023-10-27T19:10:34] -- medaka: accept:image/apng
+I, [2023-10-27T19:10:34] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:10:34] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:10:34] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:10:34] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:10:34] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:10:34] -- medaka: accept-language:en-US
+I, [2023-10-27T19:10:34] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:10:34] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:10:34] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:10:34] -- medaka: sec-fetch-site:none
+I, [2023-10-27T19:10:34] -- medaka: host:localhost:2024
+I, [2023-10-27T19:10:34] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:10:34] -- medaka: connection:keep-alive
+I, [2023-10-27T19:10:34] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:10:34] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:10:34] -- medaka: cache-control:max-age=0
+I, [2023-10-27T19:10:34] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:10:34] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:10:34] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:10:34] -- medaka: accept-encoding:br
+I, [2023-10-27T19:10:34] -- medaka: cookie:a=AAA
+I, [2023-10-27T19:10:34] -- medaka: 
+I, [2023-10-27T19:10:34] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:11:16] -- medaka: Start medaka server ...
+I, [2023-10-27T19:11:37] -- medaka: get_cookie
+I, [2023-10-27T19:11:37] -- medaka: accept:*/*
+I, [2023-10-27T19:11:37] -- medaka: host:localhost:2024
+I, [2023-10-27T19:11:37] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T19:11:37] -- medaka: cookie:a=A
+I, [2023-10-27T19:11:37] -- medaka: val=
+I, [2023-10-27T19:13:35] -- medaka: Start medaka server ...
+I, [2023-10-27T19:13:46] -- medaka: get_cookie
+I, [2023-10-27T19:13:46] -- medaka: accept:*/*
+I, [2023-10-27T19:13:46] -- medaka: host:localhost:2024
+I, [2023-10-27T19:13:46] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T19:13:49] -- medaka: get_cookie
+I, [2023-10-27T19:13:49] -- medaka: accept:*/*
+I, [2023-10-27T19:13:49] -- medaka: host:localhost:2024
+I, [2023-10-27T19:13:49] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T19:13:49] -- medaka: cookie:a=A
+I, [2023-10-27T19:14:36] -- medaka: Start medaka server ...
+I, [2023-10-27T19:14:43] -- medaka: get_cookie
+I, [2023-10-27T19:14:43] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:14:43] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:14:43] -- medaka: accept:text/html
+I, [2023-10-27T19:14:43] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:14:43] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:14:43] -- medaka: accept:image/avif
+I, [2023-10-27T19:14:43] -- medaka: accept:image/webp
+I, [2023-10-27T19:14:43] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:14:43] -- medaka: accept-language:ja
+I, [2023-10-27T19:14:43] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:14:43] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:14:43] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:14:43] -- medaka: dnt:1
+I, [2023-10-27T19:14:43] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:14:43] -- medaka: host:localhost:2024
+I, [2023-10-27T19:14:43] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:14:43] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:14:43] -- medaka: connection:keep-alive
+I, [2023-10-27T19:14:43] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:14:43] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:14:43] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:14:43] -- medaka: accept-encoding:br
+I, [2023-10-27T19:14:43] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:14:52] -- medaka: get_cookie
+I, [2023-10-27T19:14:52] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:14:52] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:14:52] -- medaka: accept:text/html
+I, [2023-10-27T19:14:52] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:14:52] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:14:52] -- medaka: accept:image/avif
+I, [2023-10-27T19:14:52] -- medaka: accept:image/webp
+I, [2023-10-27T19:14:52] -- medaka: accept:image/apng
+I, [2023-10-27T19:14:52] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:14:52] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:14:52] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:14:52] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:14:52] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:14:52] -- medaka: accept-language:en-US
+I, [2023-10-27T19:14:52] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:14:52] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:14:52] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:14:52] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:14:52] -- medaka: host:localhost:2024
+I, [2023-10-27T19:14:52] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:14:52] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:14:52] -- medaka: connection:keep-alive
+I, [2023-10-27T19:14:52] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:14:52] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:14:52] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:14:52] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:14:52] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:14:52] -- medaka: accept-encoding:br
+I, [2023-10-27T19:14:52] -- medaka: cookie:a=AAA
+I, [2023-10-27T19:14:52] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:18:00] -- medaka: Start medaka server ...
+I, [2023-10-27T19:18:09] -- medaka: get_cookie
+I, [2023-10-27T19:18:09] -- medaka: accept:*/*
+I, [2023-10-27T19:18:09] -- medaka: host:localhost:2024
+I, [2023-10-27T19:18:09] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T19:18:12] -- medaka: get_cookie
+I, [2023-10-27T19:18:12] -- medaka: accept:*/*
+I, [2023-10-27T19:18:12] -- medaka: host:localhost:2024
+I, [2023-10-27T19:18:12] -- medaka: user-agent:curl/8.0.1
+I, [2023-10-27T19:18:12] -- medaka: cookie:a=ABC
+I, [2023-10-27T19:18:24] -- medaka: get_cookie
+I, [2023-10-27T19:18:24] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:18:24] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:18:24] -- medaka: accept:text/html
+I, [2023-10-27T19:18:24] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:18:24] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:18:24] -- medaka: accept:image/avif
+I, [2023-10-27T19:18:24] -- medaka: accept:image/webp
+I, [2023-10-27T19:18:24] -- medaka: accept:image/apng
+I, [2023-10-27T19:18:24] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:18:24] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:18:24] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:18:24] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:18:24] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:18:24] -- medaka: accept-language:en-US
+I, [2023-10-27T19:18:24] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:18:24] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:18:24] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:18:24] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:18:24] -- medaka: host:localhost:2024
+I, [2023-10-27T19:18:24] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:18:24] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:18:24] -- medaka: connection:keep-alive
+I, [2023-10-27T19:18:24] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:18:24] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:18:24] -- medaka: cache-control:max-age=0
+I, [2023-10-27T19:18:24] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:18:24] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:18:24] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:18:24] -- medaka: accept-encoding:br
+I, [2023-10-27T19:18:24] -- medaka: cookie:a=AAA
+I, [2023-10-27T19:18:24] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:18:29] -- medaka: get_cookie
+I, [2023-10-27T19:18:29] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:18:29] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:18:29] -- medaka: accept:text/html
+I, [2023-10-27T19:18:29] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:18:29] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:18:29] -- medaka: accept:image/avif
+I, [2023-10-27T19:18:29] -- medaka: accept:image/webp
+I, [2023-10-27T19:18:29] -- medaka: accept:image/apng
+I, [2023-10-27T19:18:29] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:18:29] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:18:29] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:18:29] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:18:29] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:18:29] -- medaka: accept-language:en-US
+I, [2023-10-27T19:18:29] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:18:29] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:18:29] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:18:29] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:18:29] -- medaka: host:localhost:2024
+I, [2023-10-27T19:18:29] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:18:29] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:18:29] -- medaka: connection:keep-alive
+I, [2023-10-27T19:18:29] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:18:29] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:18:29] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:18:29] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:18:29] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:18:29] -- medaka: accept-encoding:br
+I, [2023-10-27T19:18:29] -- medaka: cookie:a=AAA
+I, [2023-10-27T19:18:29] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:18:31] -- medaka: get_cookie
+I, [2023-10-27T19:18:31] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:18:31] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:18:31] -- medaka: accept:text/html
+I, [2023-10-27T19:18:31] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:18:31] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:18:31] -- medaka: accept:image/avif
+I, [2023-10-27T19:18:31] -- medaka: accept:image/webp
+I, [2023-10-27T19:18:31] -- medaka: accept:image/apng
+I, [2023-10-27T19:18:31] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:18:31] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:18:31] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:18:31] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:18:31] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:18:31] -- medaka: accept-language:en-US
+I, [2023-10-27T19:18:31] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:18:31] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:18:31] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:18:31] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:18:31] -- medaka: host:localhost:2024
+I, [2023-10-27T19:18:31] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:18:31] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:18:31] -- medaka: connection:keep-alive
+I, [2023-10-27T19:18:31] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:18:31] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:18:31] -- medaka: cache-control:max-age=0
+I, [2023-10-27T19:18:31] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:18:31] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:18:31] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:18:31] -- medaka: accept-encoding:br
+I, [2023-10-27T19:18:31] -- medaka: cookie:a=AAA
+I, [2023-10-27T19:18:31] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:19:02] -- medaka: get_cookie
+I, [2023-10-27T19:19:02] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:19:02] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:19:02] -- medaka: accept:text/html
+I, [2023-10-27T19:19:02] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:19:02] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:19:02] -- medaka: accept:image/avif
+I, [2023-10-27T19:19:02] -- medaka: accept:image/webp
+I, [2023-10-27T19:19:02] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:19:02] -- medaka: accept-language:ja
+I, [2023-10-27T19:19:02] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:19:02] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:19:02] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:19:02] -- medaka: dnt:1
+I, [2023-10-27T19:19:02] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:19:02] -- medaka: host:localhost:2024
+I, [2023-10-27T19:19:02] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:19:02] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:19:02] -- medaka: connection:keep-alive
+I, [2023-10-27T19:19:02] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:19:02] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:19:02] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:19:02] -- medaka: accept-encoding:br
+I, [2023-10-27T19:19:02] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:19:14] -- medaka: get_cookie
+I, [2023-10-27T19:19:14] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:19:14] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:19:14] -- medaka: accept:text/html
+I, [2023-10-27T19:19:14] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:19:14] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:19:14] -- medaka: accept:image/avif
+I, [2023-10-27T19:19:14] -- medaka: accept:image/webp
+I, [2023-10-27T19:19:14] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:19:14] -- medaka: accept-language:ja
+I, [2023-10-27T19:19:14] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:19:14] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:19:14] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:19:14] -- medaka: dnt:1
+I, [2023-10-27T19:19:14] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:19:14] -- medaka: host:localhost:2024
+I, [2023-10-27T19:19:14] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:19:14] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:19:14] -- medaka: connection:keep-alive
+I, [2023-10-27T19:19:14] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:19:14] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:19:14] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:19:14] -- medaka: accept-encoding:br
+I, [2023-10-27T19:19:14] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:19:53] -- medaka: get_cookie
+I, [2023-10-27T19:19:53] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:19:53] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:19:53] -- medaka: accept:text/html
+I, [2023-10-27T19:19:53] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:19:53] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:19:53] -- medaka: accept:image/avif
+I, [2023-10-27T19:19:53] -- medaka: accept:image/webp
+I, [2023-10-27T19:19:53] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:19:53] -- medaka: accept-language:ja
+I, [2023-10-27T19:19:53] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:19:53] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:19:53] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:19:53] -- medaka: dnt:1
+I, [2023-10-27T19:19:53] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:19:53] -- medaka: host:localhost:2024
+I, [2023-10-27T19:19:53] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:19:53] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:19:53] -- medaka: connection:keep-alive
+I, [2023-10-27T19:19:53] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:19:53] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:19:53] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:19:53] -- medaka: accept-encoding:br
+I, [2023-10-27T19:19:53] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:19:57] -- medaka: get_cookie
+I, [2023-10-27T19:19:57] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:19:57] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:19:57] -- medaka: accept:text/html
+I, [2023-10-27T19:19:57] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:19:57] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:19:57] -- medaka: accept:image/avif
+I, [2023-10-27T19:19:57] -- medaka: accept:image/webp
+I, [2023-10-27T19:19:57] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:19:57] -- medaka: accept-language:ja
+I, [2023-10-27T19:19:57] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:19:57] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:19:57] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:19:57] -- medaka: dnt:1
+I, [2023-10-27T19:19:57] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:19:57] -- medaka: host:localhost:2024
+I, [2023-10-27T19:19:57] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:19:57] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:19:57] -- medaka: connection:keep-alive
+I, [2023-10-27T19:19:57] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:19:57] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:19:57] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:19:57] -- medaka: accept-encoding:br
+I, [2023-10-27T19:19:57] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:19:58] -- medaka: get_cookie
+I, [2023-10-27T19:19:58] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:19:58] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:19:58] -- medaka: accept:text/html
+I, [2023-10-27T19:19:58] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:19:58] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:19:58] -- medaka: accept:image/avif
+I, [2023-10-27T19:19:58] -- medaka: accept:image/webp
+I, [2023-10-27T19:19:58] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:19:58] -- medaka: accept-language:ja
+I, [2023-10-27T19:19:58] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:19:58] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:19:58] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:19:58] -- medaka: dnt:1
+I, [2023-10-27T19:19:58] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:19:58] -- medaka: host:localhost:2024
+I, [2023-10-27T19:19:58] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:19:58] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:19:58] -- medaka: connection:keep-alive
+I, [2023-10-27T19:19:58] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:19:58] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:19:58] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:19:58] -- medaka: accept-encoding:br
+I, [2023-10-27T19:19:58] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:20:05] -- medaka: get_cookie
+I, [2023-10-27T19:20:05] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:20:05] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:20:05] -- medaka: accept:text/html
+I, [2023-10-27T19:20:05] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:20:05] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:20:05] -- medaka: accept:image/avif
+I, [2023-10-27T19:20:05] -- medaka: accept:image/webp
+I, [2023-10-27T19:20:05] -- medaka: accept:image/apng
+I, [2023-10-27T19:20:05] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:20:05] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:20:05] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:20:05] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:20:05] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:20:05] -- medaka: accept-language:en-US
+I, [2023-10-27T19:20:05] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:20:05] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:20:05] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:20:05] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:20:05] -- medaka: host:localhost:2024
+I, [2023-10-27T19:20:05] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:20:05] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:20:05] -- medaka: connection:keep-alive
+I, [2023-10-27T19:20:05] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:20:05] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:20:05] -- medaka: cache-control:max-age=0
+I, [2023-10-27T19:20:05] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:20:05] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:20:05] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:20:05] -- medaka: accept-encoding:br
+I, [2023-10-27T19:20:05] -- medaka: cookie:a=AAA
+I, [2023-10-27T19:20:05] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:20:53] -- medaka: get_cookie
+I, [2023-10-27T19:20:53] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:20:53] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:20:53] -- medaka: accept:text/html
+I, [2023-10-27T19:20:53] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:20:53] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:20:53] -- medaka: accept:image/avif
+I, [2023-10-27T19:20:53] -- medaka: accept:image/webp
+I, [2023-10-27T19:20:53] -- medaka: accept:image/apng
+I, [2023-10-27T19:20:53] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:20:53] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:20:53] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:20:53] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:20:53] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:20:53] -- medaka: accept-language:en-US
+I, [2023-10-27T19:20:53] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:20:53] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:20:53] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:20:53] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:20:53] -- medaka: host:localhost:2024
+I, [2023-10-27T19:20:53] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:20:53] -- medaka: referer:http://localhost:2024/
+I, [2023-10-27T19:20:53] -- medaka: connection:keep-alive
+I, [2023-10-27T19:20:53] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:20:53] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:20:53] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:20:53] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:20:53] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:20:53] -- medaka: accept-encoding:br
+I, [2023-10-27T19:20:53] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:20:56] -- medaka: get_cookie
+I, [2023-10-27T19:20:56] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:20:56] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:20:56] -- medaka: accept:text/html
+I, [2023-10-27T19:20:56] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:20:56] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:20:56] -- medaka: accept:image/avif
+I, [2023-10-27T19:20:56] -- medaka: accept:image/webp
+I, [2023-10-27T19:20:56] -- medaka: accept:image/apng
+I, [2023-10-27T19:20:56] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:20:56] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:20:56] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:20:56] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:20:56] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:20:56] -- medaka: accept-language:en-US
+I, [2023-10-27T19:20:56] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:20:56] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:20:56] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:20:56] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:20:56] -- medaka: host:localhost:2024
+I, [2023-10-27T19:20:56] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:20:56] -- medaka: referer:http://localhost:2024/
+I, [2023-10-27T19:20:56] -- medaka: connection:keep-alive
+I, [2023-10-27T19:20:56] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:20:56] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:20:56] -- medaka: cache-control:max-age=0
+I, [2023-10-27T19:20:56] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:20:56] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:20:56] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:20:56] -- medaka: accept-encoding:br
+I, [2023-10-27T19:20:56] -- medaka: cookie:a=ABC
+I, [2023-10-27T19:20:56] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:21:44] -- medaka: Start medaka server ...
+I, [2023-10-27T19:22:00] -- medaka: get_cookie
+I, [2023-10-27T19:22:00] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:22:00] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:22:00] -- medaka: accept:text/html
+I, [2023-10-27T19:22:00] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:22:00] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:22:00] -- medaka: accept:image/avif
+I, [2023-10-27T19:22:00] -- medaka: accept:image/webp
+I, [2023-10-27T19:22:00] -- medaka: accept:image/apng
+I, [2023-10-27T19:22:00] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:22:00] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:22:00] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:22:00] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:22:00] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:22:00] -- medaka: accept-language:en-US
+I, [2023-10-27T19:22:00] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:22:00] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:22:00] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:22:00] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:22:00] -- medaka: host:localhost:2024
+I, [2023-10-27T19:22:00] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:22:00] -- medaka: referer:http://localhost:2024/
+I, [2023-10-27T19:22:00] -- medaka: connection:keep-alive
+I, [2023-10-27T19:22:00] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:22:00] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:22:00] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:22:00] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:22:00] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:22:00] -- medaka: accept-encoding:br
+I, [2023-10-27T19:22:00] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:22:03] -- medaka: get_cookie
+I, [2023-10-27T19:22:03] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:22:03] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:22:03] -- medaka: accept:text/html
+I, [2023-10-27T19:22:03] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:22:03] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:22:03] -- medaka: accept:image/avif
+I, [2023-10-27T19:22:03] -- medaka: accept:image/webp
+I, [2023-10-27T19:22:03] -- medaka: accept:image/apng
+I, [2023-10-27T19:22:03] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:22:03] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:22:03] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:22:03] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:22:03] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:22:03] -- medaka: accept-language:en-US
+I, [2023-10-27T19:22:03] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:22:03] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:22:03] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:22:03] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:22:03] -- medaka: host:localhost:2024
+I, [2023-10-27T19:22:03] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:22:03] -- medaka: referer:http://localhost:2024/
+I, [2023-10-27T19:22:03] -- medaka: connection:keep-alive
+I, [2023-10-27T19:22:03] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:22:03] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:22:03] -- medaka: cache-control:max-age=0
+I, [2023-10-27T19:22:03] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:22:03] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:22:03] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:22:03] -- medaka: accept-encoding:br
+I, [2023-10-27T19:22:03] -- medaka: cookie:b=bBBBb
+I, [2023-10-27T19:22:03] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:22:40] -- medaka: get_cookie
+I, [2023-10-27T19:22:40] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:22:40] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:22:40] -- medaka: accept:text/html
+I, [2023-10-27T19:22:40] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:22:40] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:22:40] -- medaka: accept:image/avif
+I, [2023-10-27T19:22:40] -- medaka: accept:image/webp
+I, [2023-10-27T19:22:40] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:22:40] -- medaka: accept-language:ja
+I, [2023-10-27T19:22:40] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:22:40] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:22:40] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:22:40] -- medaka: dnt:1
+I, [2023-10-27T19:22:40] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:22:40] -- medaka: host:localhost:2024
+I, [2023-10-27T19:22:40] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:22:40] -- medaka: referer:http://localhost:2024/
+I, [2023-10-27T19:22:40] -- medaka: connection:keep-alive
+I, [2023-10-27T19:22:40] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:22:40] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:22:40] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:22:40] -- medaka: accept-encoding:br
+I, [2023-10-27T19:22:40] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:22:56] -- medaka: get_cookie
+I, [2023-10-27T19:22:56] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:22:56] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:22:56] -- medaka: accept:text/html
+I, [2023-10-27T19:22:56] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:22:56] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:22:56] -- medaka: accept:image/avif
+I, [2023-10-27T19:22:56] -- medaka: accept:image/webp
+I, [2023-10-27T19:22:56] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:22:56] -- medaka: accept-language:ja
+I, [2023-10-27T19:22:56] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:22:56] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:22:56] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:22:56] -- medaka: dnt:1
+I, [2023-10-27T19:22:56] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:22:56] -- medaka: host:localhost:2024
+I, [2023-10-27T19:22:56] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:22:56] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:22:56] -- medaka: connection:keep-alive
+I, [2023-10-27T19:22:56] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:22:56] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:22:56] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:22:56] -- medaka: accept-encoding:br
+I, [2023-10-27T19:22:56] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:22:58] -- medaka: get_cookie
+I, [2023-10-27T19:22:58] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:22:58] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:22:58] -- medaka: accept:text/html
+I, [2023-10-27T19:22:58] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:22:58] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:22:58] -- medaka: accept:image/avif
+I, [2023-10-27T19:22:58] -- medaka: accept:image/webp
+I, [2023-10-27T19:22:58] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:22:58] -- medaka: accept-language:ja
+I, [2023-10-27T19:22:58] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:22:58] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:22:58] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:22:58] -- medaka: dnt:1
+I, [2023-10-27T19:22:58] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:22:58] -- medaka: host:localhost:2024
+I, [2023-10-27T19:22:58] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:22:58] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:22:58] -- medaka: connection:keep-alive
+I, [2023-10-27T19:22:58] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:22:58] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:22:58] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:22:58] -- medaka: accept-encoding:br
+I, [2023-10-27T19:22:58] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:24:20] -- medaka: Start medaka server ...
+I, [2023-10-27T19:24:35] -- medaka: get_cookie
+I, [2023-10-27T19:24:35] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:24:35] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:24:35] -- medaka: accept:text/html
+I, [2023-10-27T19:24:35] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:24:35] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:24:35] -- medaka: accept:image/avif
+I, [2023-10-27T19:24:35] -- medaka: accept:image/webp
+I, [2023-10-27T19:24:35] -- medaka: accept:image/apng
+I, [2023-10-27T19:24:35] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:24:35] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:24:35] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:24:35] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:24:35] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:24:35] -- medaka: accept-language:en-US
+I, [2023-10-27T19:24:35] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:24:35] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:24:35] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:24:35] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:24:35] -- medaka: host:localhost:2024
+I, [2023-10-27T19:24:35] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:24:35] -- medaka: referer:http://localhost:2024/
+I, [2023-10-27T19:24:35] -- medaka: connection:keep-alive
+I, [2023-10-27T19:24:35] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:24:35] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:24:35] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:24:35] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:24:35] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:24:35] -- medaka: accept-encoding:br
+I, [2023-10-27T19:24:35] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:24:38] -- medaka: get_cookie
+I, [2023-10-27T19:24:38] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:24:38] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:24:38] -- medaka: accept:text/html
+I, [2023-10-27T19:24:38] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:24:38] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:24:38] -- medaka: accept:image/avif
+I, [2023-10-27T19:24:38] -- medaka: accept:image/webp
+I, [2023-10-27T19:24:38] -- medaka: accept:image/apng
+I, [2023-10-27T19:24:38] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:24:38] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:24:38] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:24:38] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:24:38] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:24:38] -- medaka: accept-language:en-US
+I, [2023-10-27T19:24:38] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:24:38] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:24:38] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:24:38] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:24:38] -- medaka: host:localhost:2024
+I, [2023-10-27T19:24:38] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:24:38] -- medaka: referer:http://localhost:2024/
+I, [2023-10-27T19:24:38] -- medaka: connection:keep-alive
+I, [2023-10-27T19:24:38] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:24:38] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:24:38] -- medaka: cache-control:max-age=0
+I, [2023-10-27T19:24:38] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:24:38] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:24:38] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:24:38] -- medaka: accept-encoding:br
+I, [2023-10-27T19:24:38] -- medaka: cookie:a=ABC
+I, [2023-10-27T19:24:38] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:33:48] -- medaka: Start medaka server ...
+I, [2023-10-27T19:34:01] -- medaka: get_cookie
+I, [2023-10-27T19:34:01] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:34:01] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:34:01] -- medaka: accept:text/html
+I, [2023-10-27T19:34:01] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:34:01] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:34:01] -- medaka: accept:image/avif
+I, [2023-10-27T19:34:01] -- medaka: accept:image/webp
+I, [2023-10-27T19:34:01] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:34:01] -- medaka: accept-language:ja
+I, [2023-10-27T19:34:01] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:34:01] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:34:01] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:34:01] -- medaka: dnt:1
+I, [2023-10-27T19:34:01] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:34:01] -- medaka: host:localhost:2024
+I, [2023-10-27T19:34:01] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:34:01] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:34:01] -- medaka: connection:keep-alive
+I, [2023-10-27T19:34:01] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:34:01] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:34:01] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:34:01] -- medaka: accept-encoding:br
+I, [2023-10-27T19:34:01] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:34:04] -- medaka: get_cookie
+I, [2023-10-27T19:34:04] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:34:04] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:34:04] -- medaka: accept:text/html
+I, [2023-10-27T19:34:04] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:34:04] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:34:04] -- medaka: accept:image/avif
+I, [2023-10-27T19:34:04] -- medaka: accept:image/webp
+I, [2023-10-27T19:34:04] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:34:04] -- medaka: accept-language:ja
+I, [2023-10-27T19:34:04] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:34:04] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:34:04] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:34:04] -- medaka: dnt:1
+I, [2023-10-27T19:34:04] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:34:04] -- medaka: host:localhost:2024
+I, [2023-10-27T19:34:04] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:34:04] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:34:04] -- medaka: connection:keep-alive
+I, [2023-10-27T19:34:04] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:34:04] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:34:04] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:34:04] -- medaka: accept-encoding:br
+I, [2023-10-27T19:34:04] -- medaka: cookie:PHPSESSID=ojdbvk8pb43780ltnjiofp143u; a=AAA
+I, [2023-10-27T19:34:16] -- medaka: get_cookie
+I, [2023-10-27T19:34:16] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:34:16] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:34:16] -- medaka: accept:text/html
+I, [2023-10-27T19:34:16] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:34:16] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:34:16] -- medaka: accept:image/avif
+I, [2023-10-27T19:34:16] -- medaka: accept:image/webp
+I, [2023-10-27T19:34:16] -- medaka: accept:image/apng
+I, [2023-10-27T19:34:16] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:34:16] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:34:16] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:34:16] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:34:16] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:34:16] -- medaka: accept-language:en-US
+I, [2023-10-27T19:34:16] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:34:16] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:34:16] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:34:16] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:34:16] -- medaka: host:localhost:2024
+I, [2023-10-27T19:34:16] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:34:16] -- medaka: referer:http://localhost:2024/
+I, [2023-10-27T19:34:16] -- medaka: connection:keep-alive
+I, [2023-10-27T19:34:16] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:34:16] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:34:16] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:34:16] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:34:16] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:34:16] -- medaka: accept-encoding:br
+I, [2023-10-27T19:34:16] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:34:18] -- medaka: get_cookie
+I, [2023-10-27T19:34:18] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:34:18] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:34:18] -- medaka: accept:text/html
+I, [2023-10-27T19:34:18] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:34:18] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:34:18] -- medaka: accept:image/avif
+I, [2023-10-27T19:34:18] -- medaka: accept:image/webp
+I, [2023-10-27T19:34:18] -- medaka: accept:image/apng
+I, [2023-10-27T19:34:18] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:34:18] -- medaka: accept:application/signed-exchange;v=b3;q=0.7
+I, [2023-10-27T19:34:18] -- medaka: sec-ch-ua:"Chromium";v="118"
+I, [2023-10-27T19:34:18] -- medaka: sec-ch-ua:"Google Chrome";v="118"
+I, [2023-10-27T19:34:18] -- medaka: sec-ch-ua:"Not=A?Brand";v="99"
+I, [2023-10-27T19:34:18] -- medaka: accept-language:en-US
+I, [2023-10-27T19:34:18] -- medaka: accept-language:en;q=0.9
+I, [2023-10-27T19:34:18] -- medaka: accept-language:ja;q=0.8
+I, [2023-10-27T19:34:18] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:34:18] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:34:18] -- medaka: host:localhost:2024
+I, [2023-10-27T19:34:18] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:34:18] -- medaka: referer:http://localhost:2024/
+I, [2023-10-27T19:34:18] -- medaka: connection:keep-alive
+I, [2023-10-27T19:34:18] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
+I, [2023-10-27T19:34:18] -- medaka: user-agent:like Gecko) Chrome/118.0.0.0 Safari/537.36
+I, [2023-10-27T19:34:18] -- medaka: cache-control:max-age=0
+I, [2023-10-27T19:34:18] -- medaka: sec-ch-ua-platform:"Windows"
+I, [2023-10-27T19:34:18] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:34:18] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:34:18] -- medaka: accept-encoding:br
+I, [2023-10-27T19:34:18] -- medaka: cookie:a=ABC; b=bBBB
+I, [2023-10-27T19:34:18] -- medaka: sec-ch-ua-mobile:?0
+I, [2023-10-27T19:37:55] -- medaka: get_cookie
+I, [2023-10-27T19:37:55] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:37:55] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:37:55] -- medaka: accept:text/html
+I, [2023-10-27T19:37:55] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:37:55] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:37:55] -- medaka: accept:image/avif
+I, [2023-10-27T19:37:55] -- medaka: accept:image/webp
+I, [2023-10-27T19:37:55] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:37:55] -- medaka: accept-language:ja
+I, [2023-10-27T19:37:55] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:37:55] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:37:55] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:37:55] -- medaka: dnt:1
+I, [2023-10-27T19:37:55] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:37:55] -- medaka: host:localhost:2024
+I, [2023-10-27T19:37:55] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:37:55] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:37:55] -- medaka: connection:keep-alive
+I, [2023-10-27T19:37:55] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:37:55] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:37:55] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:37:55] -- medaka: accept-encoding:br
+I, [2023-10-27T19:37:59] -- medaka: get_cookie
+I, [2023-10-27T19:37:59] -- medaka: sec-fetch-dest:document
+I, [2023-10-27T19:37:59] -- medaka: sec-fetch-mode:navigate
+I, [2023-10-27T19:37:59] -- medaka: accept:text/html
+I, [2023-10-27T19:37:59] -- medaka: accept:application/xhtml+xml
+I, [2023-10-27T19:37:59] -- medaka: accept:application/xml;q=0.9
+I, [2023-10-27T19:37:59] -- medaka: accept:image/avif
+I, [2023-10-27T19:37:59] -- medaka: accept:image/webp
+I, [2023-10-27T19:37:59] -- medaka: accept:*/*;q=0.8
+I, [2023-10-27T19:37:59] -- medaka: accept-language:ja
+I, [2023-10-27T19:37:59] -- medaka: accept-language:en-US;q=0.7
+I, [2023-10-27T19:37:59] -- medaka: accept-language:en;q=0.3
+I, [2023-10-27T19:37:59] -- medaka: sec-fetch-user:?1
+I, [2023-10-27T19:37:59] -- medaka: dnt:1
+I, [2023-10-27T19:37:59] -- medaka: sec-fetch-site:same-origin
+I, [2023-10-27T19:37:59] -- medaka: host:localhost:2024
+I, [2023-10-27T19:37:59] -- medaka: upgrade-insecure-requests:1
+I, [2023-10-27T19:37:59] -- medaka: referer:http://localhost:2024/index.html
+I, [2023-10-27T19:37:59] -- medaka: connection:keep-alive
+I, [2023-10-27T19:37:59] -- medaka: user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0
+I, [2023-10-27T19:37:59] -- medaka: accept-encoding:gzip
+I, [2023-10-27T19:37:59] -- medaka: accept-encoding:deflate
+I, [2023-10-27T19:37:59] -- medaka: accept-encoding:br
+I, [2023-10-27T19:37:59] -- medaka: cookie:a=ABC; b=bBBB
+I, [2023-10-27T19:42:25] -- medaka: Start medaka server ...
+I, [2023-10-27T19:42:29] -- medaka: get_cookie
+I, [2023-10-27T22:01:03] -- medaka: Start medaka server ...
+I, [2023-10-29T16:46:23] -- medaka: Start medaka server ...
+I, [2023-10-29T16:47:10] -- medaka: get_medaka_record: id=1
+I, [2023-10-29T16:47:15] -- medaka: get_medaka_record2: id=1
+I, [2023-10-29T19:00:10] -- medaka: get_medaka_record2: id=3
+I, [2023-10-29T19:00:14] -- medaka: get_medaka_record2: id=3
+I, [2023-10-29T19:00:17] -- medaka: get_medaka_record2: id=3
+I, [2023-10-29T19:00:19] -- medaka: get_medaka_record2: id=3
+I, [2023-10-29T19:00:23] -- medaka: get_medaka_record2: id=3
+I, [2023-10-29T19:00:25] -- medaka: get_medaka_record2: id=3
+I, [2023-10-29T19:00:40] -- medaka: get_medaka_record: id=3
+I, [2023-10-29T19:00:52] -- medaka: get_medaka_record2: id=4
+I, [2023-10-29T19:00:57] -- medaka: get_medaka_record2: id=5
+I, [2023-10-29T19:02:57] -- medaka: get_medaka_record2: id=5
+I, [2023-10-29T19:03:02] -- medaka: get_medaka_record: id=2
