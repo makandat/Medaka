@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>get_request_json</title>
+ <link rel="stylesheet" href="/css/style.css" />
+ <script src="/js/JS365Lib.js"></script>
+ <script>
+  function query() {
+    const id = getValue("id");
+    if (id == "")
+      alert("id is empty.");
+    else
+      postJSON("/post_request_json", {"id":parseInt(id), "hidden":0}, (data) => {
+          setValue("headers", data["headers"]);
+          setValue("body", data["body"]);
+          setValue("result", data["result"]);
+      });
+  }
+ </script>
+</head>
+
+<body>
+ <!-- ヘッダー -->
+ <header>
+  <h1 class="frame">get_request_json</h1>
+   <p style="text-align:center;"><a href="/">HOME</a></p>
+ </header>
+
+ <!-- 本文 -->
+ <article class="section">
+  <form id="form1" class="form">
+    <div class="form-row">
+      <label>id <input type="number" id="id" class="form-control"></label>
+    </div>
+    <div class="form-row">
+      <button type="button" class="btn" onclick="javascript:query()">送信</button>
+    </div>
+  </form>
+  <h3>Headers</h3>
+  <pre id="headers" class="src"></pre>
+  <h3>Body</h3>
+  <p id="body" class="src"></p>
+  <h3>Result</h3>
+  <p id="result" class="message"></p>
+ </article>
+
+ <!-- フッター -->
+ <footer>
+  <p>&nbsp;</p>
+  <p style="text-align:center;"><a href="#top">TOP</a></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+ </footer>
+</body>
+</html>

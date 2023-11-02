@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>post_request_formdata</title>
+ <link rel="stylesheet" href="/css/style.css" />
+ <script src="/js/JS365Lib.js"></script>
+ <script>
+  function query1() {
+    const formData = new FormData(form1);
+    postFormData("/post_request_formdata", formData, (data) => {
+      setValue("headers", data["headers"]);
+      setValue("body", data["body"]);
+      setValue("result", data["result"]);
+    });
+  }
+ </script>
+</head>
+
+<body>
+ <!-- ヘッダー -->
+ <header class="frame section">
+  <h1>post_request_formdata</h1>
+   <p style="text-align:center;"><a href="/">HOME</a></p>
+ </header>
+
+ <!-- 本文 -->
+ <article class="section">
+  <br>
+  <form id="form1" name="form1" class="form">
+    <div class="form-row">
+      <label>id<br><input type="text" id="id" name="id" value="0" class="form-control"> (If 0 then insert else update)</label>
+    </div>
+    <div class="form-row">
+      <label>path<br><input type="text" id="path" name="path" size="50" class="form-control"></label>
+    </div>
+    <div class="form-row">
+      <label>methods<br><input type="text" id="methods" name="methods" class="form-control"></label>
+    </div>
+    <div class="form-row">
+      <label>query<br><input type="text" id="query" name="query" size="50" class="form-control"></label>
+    </div>
+    <div class="form-row">
+      <label>info<br><input type="text" id="info" name="info" size="80" class="form-control"></label>
+    </div>
+    <div class="form-row">
+      <button type="button" class="btn" onclick="javascript:query1()">&nbsp;&nbsp;送信&nbsp;&nbsp;</button>
+    </div>
+  </form>
+  <h3>Headers</h3>
+  <pre id="headers" class="src"></pre>
+  <h3>Body</h3>
+  <p id="body" class="src"></p>
+  <h3>Result</h3>
+  <p id="result" class="message"></p>
+ </article>
+
+ <!-- フッター -->
+ <footer>
+  <p>&nbsp;</p>
+  <p style="text-align:center;"><a href="#top">TOP</a></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+ </footer>
+</body>
+</html>

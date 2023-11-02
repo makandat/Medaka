@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>get_path_param</title>
+ <link rel="stylesheet" href="/css/style.css" />
+ <script src="/js/JS365Lib.js"></script>
+ <script>
+  function query() {
+    const id = getValue("id");
+    if (id == "")
+      alert("Error: id is empty.");
+    else
+      location.href = "/get_path_param/" + id;
+  }
+ </script>
+</head>
+
+<body>
+ <!-- ヘッダー -->
+ <header>
+  <h1 class="frame">get_path_param</h1>
+  <p style="text-align:center;"><a href="/">HOME</a></p>
+ </header>
+
+ <!-- 本文 -->
+ <article class="section">
+  <form id="form1" class="form">
+    <div class="form-row">
+      <label>id <input type="number" id="id" class="form-control"></label>
+    </div>
+    <div class="form-row">
+      <button type="button" class="btn" onclick="javascript:query()">送信</button>
+    </div>
+  </form>
+  <h3>Headers</h3>
+  <pre id="headers" class="src">{{headers}}</pre>
+  <h3>Path</h3>
+  <p id="path" class="src">{{path}}</p>
+  <h3>Result</h3>
+  <p id="result" class="message">{{result}}</p>
+ </article>
+
+ <!-- フッター -->
+ <footer>
+  <p>&nbsp;</p>
+  <p style="text-align:center;"><a href="#top">TOP</a></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+ </footer>
+</body>
+</html>

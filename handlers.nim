@@ -1,7 +1,13 @@
 # handlers.nim
 import std/asynchttpserver
-import std/[strtabs, strformat, strutils, uri, cookies, htmlgen, logging]
+import std/[strtabs, strformat, strutils, uri, cookies, htmlgen, json, jsonutils]
 import db_connector/db_sqlite
+import body_parser
+
+type BodyState = enum
+  Boundary
+  Disportion
+  Data
 
 # parse query
 func parseQuery(query: string): StringTableRef =
@@ -16,9 +22,32 @@ func getQueryValue(hash: StringTableRef, key: string, default: string): string =
   else:
     result = default
 
-# parse body
-func parseBody(body: string): StringTableRef =
+# get posted content-type
+func getContentType(headers: HttpHeaders): string =
+  return headers["content-type"]
+
+# parse body (application/x-www-form-urlencoded)
+proc parseBody(body: string): StringTableRef =
   result = newStringTable()
+  for k, v in decodeQuery(body):
+    result[k] = v
+
+# parse json body (application/json)
+proc parseJsonBody(body: string): JsonNode =
+  return parseJson(body)
+
+# parse arraybuffer body (application/octed-stream)
+func parseArrayBufferBody(body: string): string =
+  return body  # pure binary data
+
+# parse mulitipart body
+func parseMultipartBody(body: string, headers: HttpHeaders): seq[string] =
+  let boundary = body_parser.getBoundary(headers)
+  return body_parser.getDispositions(body, boundary)
+
+# parse formdata body (mulitipart/form-data)
+func parseFormDataBody(body: string, headers: HttpHeaders): seq[string] =
+  return parseMultipartBody(body, headers)
 
 # return template file as Response
 proc templateFile(filepath: string, args: StringTableRef): (HttpCode, string) =
@@ -30,6 +59,15 @@ proc templateFile(filepath: string, args: StringTableRef): (HttpCode, string) =
   except Exception as e:
     let message = e.msg
     result = (Http500, fmt"<h1>Internal error</h1><p>{message}</p>")
+
+# octed-stream to hex string
+proc hexDump*[T](v: T): string =
+  var s: seq[uint8] = @[]
+  s.setLen(v.sizeof)
+  copymem(addr(s[0]), v.unsafeAddr, v.sizeof)
+  result = ""
+  for i in s:
+    result.add(i.toHex)
 
 # html header
 func htmlHeader(): HttpHeaders =
@@ -87,8 +125,15 @@ proc get_form1*(filepath: string, query: string): (HttpCode, string, HttpHeaders
   return (status, buff, htmlHeader())
 
 # post_form2
-proc post_form2*(filepath: string, body: string): (HttpCode, string, HttpHeaders) =
-  var args = newStringTable({"result":body})
+proc post_form2*(filepath: string, headers:HttpHeaders, body: string): (HttpCode, string, HttpHeaders) =
+  var s = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  var args = newStringTable({"headers":s, "body":body})
   if body == "":
     args["id"] = ""
     args["name"] = ""
@@ -110,30 +155,65 @@ proc post_form2*(filepath: string, body: string): (HttpCode, string, HttpHeaders
   return (status, buff, htmlHeader())
 
 # post_form3
-proc post_form3*(filepath: string, body: string): (HttpCode, string, HttpHeaders) =
-  var args = newStringTable({"result":body})
+proc post_form3*(filepath: string, headers:HttpHeaders, name: string, body: string, upload_folder:string=""): (HttpCode, string, HttpHeaders) =
+  var s = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  var args = newStringTable({"headers":s, "body":body})
   if body != "":
-    var hash = parseBody(body)
+    var disps = parseMultipartBody(body, headers)
+    let savefile = upload_folder & "/" & disps.getFileName(name)
+    let chunk = disps.getChunk(name)
+    writeFile(savefile, chunk)
   var (status, buff) = templateFile(filepath, args)
   return (status, buff, htmlHeader())
 
+# get_path_param
+proc get_path_param*(filepath:string, path:string, headers:HttpHeaders): (HttpCode, string, HttpHeaders) =
+  var s = ""
+  var res = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  let parts = path.split("/")
+  var id = 0
+  if len(parts) > 2:
+    id = parseInt(parts[2])
+  let db = db_sqlite.open("./medaka.db", "", "", "")
+  let sql: SQLQuery = SQLQuery("SELECT * FROM medaka WHERE id = ?")
+  var row:Row = db.getRow(sql, id)
+  if row[0] == "":
+    res = "Empty"
+  else:
+    for v in row:
+      res &= fmt"{v}, "
+      res = res.substr(0, len(res)-2)
+  var args = newStringTable({"headers":s, "path":path, "result":res})
+  var (status, buff) = templateFile(filepath, args)
+  return (status, buff, htmlHeader())
+
+
 # redirecting
 proc get_redirect*(query: string): (HttpCode, string, HttpHeaders) =
-  info("get_redirect: " & query)
   var args = parseQuery(query)
   var (status, buff) = templateFile("./templates/redirect.html", args)
   return (status, buff, htmlHeader())
 
 # show message page
 proc get_message*(query: string): (HttpCode, string, HttpHeaders) =
-  info("get_message: " & query)
   var args = parseQuery(query)
   var (status, buff) = templateFile("./templates/message.html", args)
   return (status, buff, htmlHeader())
 
 # cookie
 proc get_cookie*(headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
-  info("get_cookie")
   var args = newStringTable()
   var i = 0
   var cookies: StringTableRef
@@ -156,7 +236,6 @@ proc get_cookie*(headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
 
 # get_medaka_record
 proc get_medaka_record*(query: string): (HttpCode, string, HttpHeaders) =
-  info("get_medaka_record: " & query)
   var data = parseQuery(query)
   var id = parseInt(getQueryValue(data, "id", "0"))
   let db = db_sqlite.open("./medaka.db", "", "", "")
@@ -167,32 +246,110 @@ proc get_medaka_record*(query: string): (HttpCode, string, HttpHeaders) =
     buff = "Empty"
   else:
     for v in row:
-      buff &= string(v)
-      buff &= ","
+      buff &= fmt"{v}, "
       buff = buff.substr(0, len(buff)-2)
   return (Http200, buff, textHeader())
   
 # get_medaka_record2
 proc get_medaka_record2*(query: string): (HttpCode, string, HttpHeaders) =
-  info("get_medaka_record2: " & query)
   var data = parseQuery(query)
   var id = parseInt(getQueryValue(data, "id", "0"))
   let db = db_sqlite.open("./medaka.db", "", "", "")
-  var buff: string = ""
+  var j: JsonNode
   let sql: SQLQuery = SQLQuery("SELECT * FROM medaka WHERE id = ?")
   var row:Row = db.getRow(sql, id)
   if row[0] == "":
-    buff = "{\"id\":\"\", \"path\":\"\", \"method\":\"\", \"query\":\"\", \"info\":\"\"}"
+    j = %* {"id":"", "path":"", "method":"", "query":"", "info":""}
   else:
-    buff = "{\"id\":"
-    buff &= $row[0]
-    buff &= ", \"path\":\""
-    buff &= row[1]
-    buff &= "\", \"method\":\""
-    buff &= row[2]
-    buff &= "\", \"query\":\""
-    buff &= row[3]
-    buff &= "\", \"info\":\""
-    buff &= row[4]
-    buff &= "\"}"
-  return (Http200, buff, jsonHeader())
+    j = %* {"id":row[0], "path":row[1], "method":row[2], "query":row[3], "info":row[4]}
+  return (Http200, $j, jsonHeader())
+
+# post_request_json
+proc post_request_json*(body: string, headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
+  var content = newStringTable()
+  var status = Http200
+  var res = ""
+  var s = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  content["headers"] = s
+  content["body"] = body
+  content["result"] = ""
+  var j = parseJson(body)
+  var id = j["id"]
+  let db = db_sqlite.open("./medaka.db", "", "", "")
+  let sql: SQLQuery = SQLQuery("SELECT * FROM medaka WHERE id = ?")
+  var row:Row = db.getRow(sql, id)
+  if row[0] == "":
+    res = "Empty"
+  else:
+    for v in row:
+      res &= fmt"{v}, "
+      res = res.substr(0, len(res)-2)
+    content["result"] = res
+  var data = %* {"headers":content["headers"], "body":content["body"], "result":content["result"]}
+  return (status, $data, jsonHeader())
+  
+  
+# post_request_formdata
+proc post_request_formdata*(body: string, headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
+  var status = Http200
+  var res = ""
+  var s = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  var disps = parseMultipartBody(body, headers)
+  var rslt: JsonNode
+  var id = disps.getValue("id")
+  let path = disps.getValue("path")
+  let methods = disps.getValue("methods")
+  let query = disps.getValue("query")
+  let info = disps.getValue("info")
+  echo "id=", id
+  echo "path=", path
+  echo "methods=", methods
+  echo "query=", query
+  echo "info=", info
+  var sql: string
+  let db = db_sqlite.open("./medaka.db", "", "", "")
+  if id == "0":
+    # Insert
+    sql = "INSERT INTO medaka VALUES(NULL, ?, ?, ?, ?)"
+    db.exec(SqlQuery(sql), path, methods, query, info)
+    rslt = %* {"result":"Inserted", "headers":s, "body":body}
+    echo "Inserted: ", sql
+  else:
+    # Update
+    echo "Update id=", id
+    sql = "UPDATE medaka SET path=?, methods=?, query=?, info=? WHERE id=?"
+    db.exec(SqlQuery(sql), path, methods, query, info, parseInt(id))
+    rslt = %* {"result":"Updated", "headers":s, "body":body}
+  db.close()
+  return (Http200, $rslt, jsonHeader())
+
+# post_request_arraybuffer
+proc post_request_arraybuffer*(body: string, headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
+  var status = Http200
+  var ret_headers = ""
+  for k, v in headers:
+    ret_headers &= k
+    ret_headers &= ": "
+    for w in v:
+      ret_headers &= w
+    ret_headers &= "\n"
+  let ret_body = hexDump(body)
+  var rslt = %* {"headers":ret_headers, "body":ret_body}
+  return (Http200, $rslt, jsonHeader())
+
+# session
+proc get_session*(filepath: string, headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
+  var content = ""
+  return (Http200, content, htmlHeader())

@@ -16,6 +16,18 @@ h3 {
   color: indigo;
 }
 
+h4 {
+  margin-left: 2%;
+  padding:4px;
+  color: black;
+}
+
+.src {
+  border: solid thin silver;
+  padding: 4px;
+  border-radius: 6px;
+}
+
 .frame {
   padding: 15px;
   background-color: whitesmoke;
@@ -53,6 +65,7 @@ h3 {
   margin-top: 4px;
   margin-bottom: 4px;
   padding: 3px;
+  height: 30px;
   border-radius: 6px;
 }
 
