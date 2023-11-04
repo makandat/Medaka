@@ -4,7 +4,7 @@ import std/asyncdispatch
 import std/[files, paths, strtabs, json, mimetypes, strutils, strformat, logging, re]
 import handlers
 
-const VERSION = "0.1.5"
+const VERSION = "0.2.0"
 const USE_PORT:uint16 = 2024
 const CONFIG_FILE = "medaka.json"
 const LOG_FILE = "medaka.log"
@@ -60,6 +60,27 @@ proc callback(req: Request) {.async.} =
   #   static files
   if req.reqMethod == HttpGet and fileExists(Path(filepath)):
     (status, content, headers) = staticFile(filepath)
+  # CGI
+  elif req.reqMethod == HttpGet and req.url.path.startsWith("/cgi-bin/"):
+    try:
+      filepath = settings["cgi-bin"] & "/" & req.url.path.substr(len("/cgi-bin/"))
+      (status, content) = handlers.execCgi(filepath, req.url.query)
+      headers = newHttpHeaders()
+      var lines = content.split("\n")
+      var i = 0
+      while len(lines[i]) > 0:
+        var pair = lines[i].split(": ")
+        headers[pair[0]] = pair[1]
+        i += 1
+      content = ""
+      i += 1
+      while i < len(lines):
+        content &= lines[i] & "\n"
+        i += 1
+    except Exception as e:
+      content = e.msg
+    await req.respond(status, content, headers)
+    return
   #  /hello
   elif req.url.path == "/hello":
     (status, content, headers) = handlers.get_hello()
@@ -106,7 +127,7 @@ proc callback(req: Request) {.async.} =
     (status, content, headers) = staticFile(filepath)
   # POST /post_request_arraybuffer
   elif req.reqMethod == HttpPost and req.url.path == "/post_request_formdata":
-    (status, content, headers) = handlers.post_request_formdata(req.body, req.headers)
+    (status, content, headers) = handlers.post_request_arraybuffer(req.body, req.headers)
   #  /redirect
   elif req.url.path == "/redirect":
     filepath = templates & "/redirect.html"
@@ -117,10 +138,19 @@ proc callback(req: Request) {.async.} =
   #  /cookie
   elif req.url.path == "/cookie":
     (status, content, headers) = handlers.get_cookie(req.headers)
+  #  /remove_cookies
+  elif req.url.path == "/remove_cookie":
+    let filepath = htdocs & "/remove_cookie.html"
+    (status, content, headers) = staticFile(filepath)
   #  /session
-  elif req.url.path == "/session":
+  elif req.reqMethod == HttpGet and req.url.path == "/session":
+    echo req.headers
     filepath = templates & "/session.html"
-    (status, content, headers) = handlers.get_session(filepath, req.headers)
+    (status, content, headers) = handlers.post_session(filepath, req.url.query, req.headers)
+  elif req.reqMethod == HttpPost and req.url.path == "/session":
+    filepath = templates & "/session.html"
+    #echo $(req.headers)
+    (status, content, headers) = handlers.post_session(filepath, req.body, req.headers)
   #  /get_medaka_record
   elif req.url.path == "/get_medaka_record":
     if req.url.query == "":

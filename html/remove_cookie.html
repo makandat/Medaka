@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>Remove Cookie</title>
+ <link rel="stylesheet" href="/css/style.css" />
+ <script src="/js/JS365Lib.js"></script>
+ <script>
+  function body_load() {
+    setValue("cookies", document.cookie);
+  }
+
+  function remove_cookie() {
+    let cookie_name = getValue("cookie_name")
+    document.cookie = `${cookie_name}=; Max-Age=0`;
+    alert("All cookies has been removed.");
+    location.reload();
+  }
+
+  function go_home() {
+    location.href = "/";
+  }
+ </script>
+</head>
+
+<body onload="body_load()">
+ <!-- ヘッダー -->
+ <header>
+  <h1 class="bgcolor">Remove Cookie</h1>
+  <p style="text-align:center;"><a href="/">HOME</a></p>
+ </header>
+
+ <!-- 本文 -->
+ <article class="section">
+  <form class="form">
+    <div class="form-row"><label>Cookie Name<br>
+      <input type="text" id="cookie_name" class="form-control">
+     </label></div>
+    <div class="form-row">
+      <button type="button" class="btn" onclick="remove_cookie()">Yes, remove the cookie</button>
+      <button type="button" class="btn" onclick="go_home()">No, return home</button>
+    </div>
+  </form>
+  <div id="message" class="message"></div>
+  <h2 style="text-align:center;">Cookie List</h2>
+  <div id="cookies" class="message"></div>
+ </article>
+
+ <!-- フッター -->
+ <footer>
+  <p>&nbsp;</p>
+  <p style="text-align:center;"><a href="#top">TOP</a></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+ </footer>
+</body>
+</html>

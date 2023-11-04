@@ -79,3 +79,12 @@ a:link, a:visited {
   color: dodgerblue;
   text-decoration: none;
 }
+
+table, th, td {
+  border-collapse: collapse;
+  border: solid thin gray;
+}
+
+th, td {
+  padding: 5px;
+}

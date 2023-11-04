@@ -10,7 +10,24 @@
   <section class="section">
    <h1 class="frame">session</h1>
    <p style="text-align:center;"><a href="/">HOME</a></p>
-
+   <br />
+   <h4>Add/Remove session variables</h4>
+   <form class="form" id="form1" name="form1" method="POST" action="/session">
+     <div class="form-row"><label>
+       <input type="checkbox" name="remove" id="remove" value="remove" class="form-control"> remove
+     </label></div>
+     <div class="form-row"><label>name<br>
+       <input type="text" name="name" id="name" class="form-control">
+     </label></div>
+     <div class="form-row"><label>value<br>
+       <input type="text" name="value" id="value" size="50" class="form-control">
+     </label></div>
+     <div class="form-row">
+       <button type="submit" id="execute" class="btn">&nbsp;&nbsp;Execute&nbsp;&nbsp;</button>
+     </div>
+   </form>
+   <br>
+   <div class="message" id="sessionList">{{sessionList}}</div>
   </section>
  </body>
 </html>

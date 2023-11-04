@@ -3,31 +3,23 @@
 <head>
  <meta charset="utf-8" />
  <meta name="viewport" content="width=device-width,initial-scale=1" />
- <title>get_request_arraybuffer</title>
+ <title>post_request_arraybuffer</title>
  <link rel="stylesheet" href="/css/style.css" />
  <script src="/js/JS365Lib.js"></script>
  <script>
-  fuction toBin(data) {
-    let s = "";
-    let cd = data.split(" ");
-    for (let c of cd) {
-      if (c.startsWith("\\x") {
-        s += String.fromCharCode(c);
-      }
-      else {
-        s += c;
-      }
-    }
-  }
-
-  function query() {
-    let buffer = toBin(form1.data);
-    fetchArrayBuffer(
-      "/post_request_arraybuffer", buffer, "POST", false, (data) => {
-        setValue("headers", data["headers"]);
-        setValue("body", data["body"]);
-      }
-    );
+  function sendData() {
+    let bdata = getValue("data");
+    const url = "/post_request_arraybuffer";
+    const request = new Request(url, {
+      method:"POST",
+      body:bdata,
+    });
+    request.arrayBuffer()
+    .then(data => {
+      setValue("length", data.byteLength);
+      const view = new Uint8Array(data);
+      setValue("body", view.toString());
+    });
   }
  </script>
 </head>
@@ -35,7 +27,7 @@
 <body>
  <!-- ヘッダー -->
  <header class="frame section">
-  <h1>get_request_arraybuffer</h1>
+  <h1>post_request_arraybuffer</h1>
    <p style="text-align:center;"><a href="/">HOME</a></p>
  </header>
 
@@ -44,14 +36,14 @@
   <br>
   <form id="form1" name="form1" class="form">
     <div class="form-row">
-      <label>data<br><input type="text" id="data" size="100" value="A B C \x34 \x35 \x0a" class="form-control"></label>
+      <label>data<br><input type="text" id="data" size="100" value="ABC 012" class="form-control"></label>
     </div>
     <div class="form-row">
-      <button type="button" class="btn" onclick="javascript:query()">&nbsp;&nbsp;送信&nbsp;&nbsp;</button>
+      <button type="button" class="btn" onclick="javascript:sendData()">&nbsp;&nbsp;送信&nbsp;&nbsp;</button>
     </div>
   </form>
-  <h3>Headers</h3>
-  <pre id="headers" class="src"></pre>
+  <h3>Byte length</h3>
+  <p id="length" class="src"></p>
   <h3>Body</h3>
   <p id="body" class="src"></p>
  </article>
