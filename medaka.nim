@@ -4,11 +4,11 @@ import std/asyncdispatch
 import std/[files, paths, strtabs, json, mimetypes, strutils, strformat, logging, re]
 import handlers
 
-const VERSION = "0.2.0"
+const VERSION = "0.2.1"
 const USE_PORT:uint16 = 2024
 const CONFIG_FILE = "medaka.json"
 const LOG_FILE = "medaka.log"
-const START_MSG = "Start medaka server ..."
+let START_MSG = fmt"Start medaka server v{VERSION} ..."
 
 # read medaka.json
 proc readSettings(): StringTableRef =
@@ -176,7 +176,7 @@ when isMainModule:
   initLogger()
   var server = newAsyncHttpServer()
   server.listen(Port(USE_PORT))
-  echo START_MSG & "\n http://localhost:" & $USE_PORT
+  echo START_MSG & "\n URL: http://localhost:" & $USE_PORT
   info START_MSG
   while true:
     if server.shouldAcceptRequest():
