@@ -4,7 +4,7 @@ import std/asyncdispatch
 import std/[files, paths, strtabs, json, mimetypes, strutils, strformat, logging, re]
 import handlers
 
-const VERSION = "0.2.1"
+const VERSION = "0.2.2"
 const USE_PORT:uint16 = 2024
 const CONFIG_FILE = "medaka.json"
 const LOG_FILE = "medaka.log"
@@ -62,23 +62,27 @@ proc callback(req: Request) {.async.} =
     (status, content, headers) = staticFile(filepath)
   # CGI
   elif req.reqMethod == HttpGet and req.url.path.startsWith("/cgi-bin/"):
-    try:
-      filepath = settings["cgi-bin"] & "/" & req.url.path.substr(len("/cgi-bin/"))
-      (status, content) = handlers.execCgi(filepath, req.url.query)
-      headers = newHttpHeaders()
-      var lines = content.split("\n")
-      var i = 0
-      while len(lines[i]) > 0:
-        var pair = lines[i].split(": ")
-        headers[pair[0]] = pair[1]
+    if handlers.is_windows():
+      content = "<h1>CGI is not supported on Windows.</h1>"
+      status = Http400
+    else:
+      try:
+        filepath = settings["cgi-bin"] & "/" & req.url.path.substr(len("/cgi-bin/"))
+        (status, content) = handlers.execCgi(filepath, req.url.query)
+        headers = newHttpHeaders()
+        var lines = content.split("\n")
+        var i = 0
+        while len(lines[i]) > 0:
+          var pair = lines[i].split(": ")
+          headers[pair[0]] = pair[1]
+          i += 1
+        content = ""
         i += 1
-      content = ""
-      i += 1
-      while i < len(lines):
-        content &= lines[i] & "\n"
-        i += 1
-    except Exception as e:
-      content = e.msg
+        while i < len(lines):
+          content &= lines[i] & "\n"
+          i += 1
+      except Exception as e:
+        content = e.msg
     await req.respond(status, content, headers)
     return
   #  /hello

@@ -1,15 +1,15 @@
 # handlers.nim
 import std/asynchttpserver
-import std/[strtabs, strformat, strutils, uri, cookies, htmlgen, json, jsonutils, logging, osproc, streams]
+import std/[os, strtabs, strformat, strutils, uri, cookies, htmlgen, json, jsonutils, logging, osproc, streams, mimetypes, paths]
 import db_connector/db_sqlite
 import body_parser
 
 const SESSION_NAME = "medaka_session"
 
-type BodyState = enum
-  Boundary
-  Disportion
-  Data
+#type BodyState = enum
+#  Boundary
+#  Disportion
+#  Data
 
 # parse query
 func parseQuery(query: string): StringTableRef =
@@ -81,28 +81,54 @@ proc getCookies(headers: HttpHeaders): StringTableRef =
         cookies[k1] = v1
   return cookies
 
+# get mime type
+func getMimetype*(filepath: string): string =
+  let m = newMimetypes()
+  let p = Path(filepath)
+  let (dir, file, ext) = p.splitFile()
+  let mime = m.getMimetype(ext)
+  return mime
+
+# send file
+proc sendFile*(filepath: string, req: Request): (HttpCode, string, HttpHeaders) =
+  var status: HttpCode = Http200
+  var content = ""
+  var headers = newHttpHeaders()
+  try:
+    content = readFile(filepath)
+    let mime = getMimetype(filepath)
+    headers["Content-Type"] = mime
+  except Exception as e:
+    error(e.msg)
+    status = Http500
+    content = fmt"<h1>Fatal error: {e.msg}</h1>"
+  return (status, content, headers)
 
 # get StringTable value
-func getStValue(hash: StringTableRef, key:string, default:string=""): string =
+func getStValue*(hash: StringTableRef, key:string, default:string=""): string =
   if hash.haskey(key):
     result = hash[key]
   else:
     result = default
 
+# is os Windows
+proc is_windows*(): bool =
+  return dirExists("C:/Windows")
+
 # html header
-func htmlHeader(): HttpHeaders =
+func htmlHeader*(): HttpHeaders =
   return newHttpHeaders({"Content-Type":"text/html; charset=utf-8"})
 
 # text header
-func textHeader(): HttpHeaders =
+func textHeader*(): HttpHeaders =
   return newHttpHeaders({"Content-Type":"text/plain; charset=utf-8"})
 
 # json header
-func jsonHeader(): HttpHeaders =
+func jsonHeader*(): HttpHeaders =
   return newHttpHeaders({"Content-Type":"application/json; charset=utf-8"})
 
 # octed-stream header
-func octedHeader(): HttpHeaders =
+func octedHeader*(): HttpHeaders =
   return newHttpHeaders({"Content-Type":"application/octed-stream"})
 
 
@@ -114,7 +140,7 @@ func octedHeader(): HttpHeaders =
 
 # hello
 proc get_hello*(): (HttpCode, string, HttpHeaders) =
-  result = (Http200, "Hello World!", newHttpHeaders({"Content-Type":"text/plain"}))
+  result = (Http200, "Hello World!", textHeader())
 
 # execute CGI
 proc execCgi*(filepath: string, query: string): (HttpCode, string) =
