@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>sendfile</title>
+ <link rel="stylesheet" href="/css/style.css" />
+ <script src="/js/JS365Lib.js"></script>
+ <script>
+   function button1_click() {
+     let path = form1.path.value
+     if (path == "") {
+       alert("path is empty.");
+       return;
+     }
+     if (path.startsWith('"') && path.endsWith('"'))
+       path = path.substring(1, path.length - 1);
+     path = path.replaceAll("\\", "/");
+     let imgsrc = "/sendfile?path=" + path;
+     setAttr("image", "src", imgsrc);
+   };
+</script>
+</head>
+
+<body>
+ <!-- ヘッダー -->
+ <header class="section">
+  <h1>sendfile</h1>
+  <p style="text-align:center;"><a href="/">HOME</a></p>
+ </header>
+
+ <!-- 本文 -->
+ <article class="section">
+  <br>
+  <form class="form" id="form1" name="form1">
+    <div class="form-row">
+      <label>image path<br><input type="text" id="path" name="path" size="100" class="form-control"></label>
+    </div>
+    <div class="form-row">
+     <button id="button1" name="button1" type="button" class="btn" onclick="button1_click()"> Get </button>
+    </div>
+  </form>
+  <br>
+  <figure style="text-align:center;">
+   <img src="" id="image"  style="border: solid thin silver; padding:5px;" />
+  </figure>
+ </article>
+
+ <!-- フッター -->
+ <footer>
+  <p>&nbsp;</p>
+  <p style="text-align:center;"><a href="#top">TOP</a></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+ </footer>
+</body>
+</html>

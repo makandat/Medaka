@@ -4,7 +4,7 @@ import std/asyncdispatch
 import std/[files, paths, strtabs, json, mimetypes, strutils, strformat, logging, re]
 import handlers
 
-const VERSION = "0.2.2"
+const VERSION = "0.3.0"
 const USE_PORT:uint16 = 2024
 const CONFIG_FILE = "medaka.json"
 const LOG_FILE = "medaka.log"
@@ -153,7 +153,6 @@ proc callback(req: Request) {.async.} =
     (status, content, headers) = handlers.post_session(filepath, req.url.query, req.headers)
   elif req.reqMethod == HttpPost and req.url.path == "/session":
     filepath = templates & "/session.html"
-    #echo $(req.headers)
     (status, content, headers) = handlers.post_session(filepath, req.body, req.headers)
   #  /get_medaka_record
   elif req.url.path == "/get_medaka_record":
@@ -164,9 +163,27 @@ proc callback(req: Request) {.async.} =
   #  /get_medaka_record2
   elif req.url.path == "/get_medaka_record2":
     if req.url.query == "":
-      (status, content, headers) = staticFile("./html/get_medaka_record2.html")
+      filepath = htdocs & "/get_medaka_record2.html"
+      (status, content, headers) = staticFile(filepath)
     else:
       (status, content, headers) = handlers.get_medaka_record2(req.url.query)
+  # /jump (redirect)
+  elif req.url.path == "/jump":
+    let kv = handlers.parseQuery(req.url.query)
+    (status, content, headers) =  handlers.redirect(kv["url"])
+  # /cookie_proc
+  elif req.url.path == "/cookie_proc":
+    headers = jsonHeader()
+    content = handlers.cookie_proc(req.url.query, req.headers)
+  # /session_proc
+  elif req.url.path == "/session_proc":
+    headers = jsonHeader()
+    content = handlers.session_proc(req.url.query, req.headers)
+  # /sendfile
+  elif req.url.path == "/sendfile":
+    var kv = parseQuery(req.url.query)
+    let filepath = kv["path"]
+    (status, content, headers) = handlers.sendfile(filepath, req)
   else:
     status = Http403 # Forbidden
     headers = newHttpHeaders({"Content-Type":"text/html"})

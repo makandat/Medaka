@@ -52,15 +52,38 @@ h4 {
 }
 
 .btn {
+  margin-left: 5px;
   padding: 6px;
   border-radius: 6px;
   height: 32px;
+}
+
+.btn-b {
+  margin-left: 5px;
+  padding: 6px;
+  border-radius: 6px;
+  height: 32px;
+  background-color: lightskyblue;
+}
+
+.btn-y {
+  margin-left: 5px;
+  padding: 6px;
+  border-radius: 6px;
+  height: 32px;
+  background-color: yellow;
 }
 
 .form-row {
   margin-top: 5px;
   margin-bottom: 4px;
 }
+
+.form-row2 {
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
 .form-control {
   margin-top: 4px;
   margin-bottom: 4px;

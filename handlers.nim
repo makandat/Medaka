@@ -6,53 +6,56 @@ import body_parser
 
 const SESSION_NAME = "medaka_session"
 
-#type BodyState = enum
-#  Boundary
-#  Disportion
-#  Data
+type
+  HandlerResult* = (HttpCode, string, HttpHeaders)
+
+func htmlHeader*(): HttpHeaders;
+func textHeader*(): HttpHeaders;
+func jsonHeader*(): HttpHeaders;
+func octedHeader*(): HttpHeaders;
 
 # parse query
-func parseQuery(query: string): StringTableRef =
+func parseQuery*(query: string): StringTableRef =
   result = newStringTable()
   for k, v in decodeQuery(query):
     result[k] = v
 
 # get hash value or default value
-func getQueryValue(hash: StringTableRef, key: string, default: string): string =
+func getQueryValue*(hash: StringTableRef, key: string, default: string): string =
   if hash.hasKey(key):
     result = hash[key]
   else:
     result = default
 
 # get posted content-type
-func getContentType(headers: HttpHeaders): string =
+func getContentType*(headers: HttpHeaders): string =
   return headers["content-type"]
 
 # parse body (application/x-www-form-urlencoded)
-proc parseBody(body: string): StringTableRef =
+proc parseBody*(body: string): StringTableRef =
   result = newStringTable()
   for k, v in decodeQuery(body):
     result[k] = v
 
 # parse json body (application/json)
-proc parseJsonBody(body: string): JsonNode =
+proc parseJsonBody*(body: string): JsonNode =
   return parseJson(body)
 
 # parse arraybuffer body (application/octed-stream)
-func parseArrayBufferBody(body: string): string =
+func parseArrayBufferBody*(body: string): string =
   return body  # pure binary data
 
 # parse mulitipart body
-func parseMultipartBody(body: string, headers: HttpHeaders): seq[string] =
+func parseMultipartBody*(body: string, headers: HttpHeaders): seq[string] =
   let boundary = body_parser.getBoundary(headers)
   return body_parser.getDispositions(body, boundary)
 
 # parse formdata body (mulitipart/form-data)
-func parseFormDataBody(body: string, headers: HttpHeaders): seq[string] =
+func parseFormDataBody*(body: string, headers: HttpHeaders): seq[string] =
   return parseMultipartBody(body, headers)
 
 # return template file as Response
-proc templateFile(filepath: string, args: StringTableRef): (HttpCode, string) =
+proc templateFile*(filepath: string, args: StringTableRef): (HttpCode, string) =
   try:
     var buff: string = readFile(filepath)
     for k, v in args:
@@ -71,16 +74,6 @@ proc hexDump*[T](v: T): string =
   for i in s:
     result.add(i.toHex)
 
-# get cookies
-proc getCookies(headers: HttpHeaders): StringTableRef =
-  var cookies: StringTableRef = newStringTable()
-  for k, v in headers:
-    if toLowerAscii(k) == "cookie":
-      var cookies1 = parseCookies(v)
-      for k1, v1 in cookies1:
-        cookies[k1] = v1
-  return cookies
-
 # get mime type
 func getMimetype*(filepath: string): string =
   let m = newMimetypes()
@@ -90,7 +83,7 @@ func getMimetype*(filepath: string): string =
   return mime
 
 # send file
-proc sendFile*(filepath: string, req: Request): (HttpCode, string, HttpHeaders) =
+proc sendFile*(filepath: string, req: Request):HandlerResult  =
   var status: HttpCode = Http200
   var content = ""
   var headers = newHttpHeaders()
@@ -114,6 +107,99 @@ func getStValue*(hash: StringTableRef, key:string, default:string=""): string =
 # is os Windows
 proc is_windows*(): bool =
   return dirExists("C:/Windows")
+
+# get cookies
+proc getCookies(headers: HttpHeaders): StringTableRef =
+  var cookies: StringTableRef = newStringTable()
+  for k, v in headers:
+    if toLowerAscii(k) == "cookie":
+      var cookies1 = parseCookies(v)
+      for k1, v1 in cookies1:
+        cookies[k1] = v1
+  return cookies
+
+# setCookieValue
+proc setCookieValue(name, value: string, headers: HttpHeaders) =
+  if headers.hasKey("Set-Cookie"):
+    var cookie: string = headers["Set-Cookie"]
+    cookie &= "; {name}=" & encodeUrl(value)
+    headers["Set-Cookie"] = cookie
+  else:
+    headers["Set-Cookie"] = name & "=" & encodeUrl(value)
+
+# removeCookie
+proc removeCookie(name, value: string, headers: HttpHeaders) =
+  if headers.hasKey("Set-Cookie"):
+    var cookie: string = headers["Set-Cookie"]
+    cookie &= "; {name}=" & encodeUrl(value)
+    headers["Set-Cookie"] = cookie & "; Max-Age=0"
+  else:
+    headers["Set-Cookie"] = name & "=" & encodeUrl(value)  & " Max-Age=0"
+
+# getCookieValue
+proc getCookieValue(name: string, headers: HttpHeaders): string =
+  var cookies = getCookies(headers)
+  if len(cookies) == 0:
+    return ""
+  elif cookies.hasKey(name):
+    return decodeUrl(cookies[name])
+  else:
+    return ""
+
+# getCookieItems
+proc getCookieItems(headers: HttpHeaders): StringTableRef =
+  var cookies = getCookies(headers)
+  var items = newStringTable()
+  for k, v in cookies:
+    items[k] = v
+  return items
+
+# set session value as string
+proc setSessionValue(name:string, value:string, headers:HttpHeaders) =
+  var cookies1 = getCookies(headers)
+  var session = ""
+  if cookies1.hasKey(SESSION_NAME):
+    session = decodeUrl(cookies1[SESSION_NAME])
+    var kv = parseCookies(session)
+    kv[name] = value
+    session = "{"
+    for k,v in kv:
+      session &= fmt"{k}={v}; "
+    session = session.substr(0, len(session) - 3) & "}"
+    headers["Set-Cookie"] = SESSION_NAME & "=" & encodeUrl(session)
+
+# get session value as string
+proc getSessionValue(name: string, headers:HttpHeaders): string =
+  var cookies = getCookies(headers)
+  var jn:JsonNode = %* {}
+  var session = ""
+  if cookies.hasKey(SESSION_NAME):
+    session = decodeUrl(cookies[SESSION_NAME])
+    if session != "":
+      try:
+        jn = parseJson(session)
+      except:
+        jn = %* {}
+    return jn.getStr(name)
+  else:
+    return ""
+
+# get session items
+proc getSessionString(headers:HttpHeaders): string =
+  var cookies = getCookies(headers)
+  var session = decodeUrl(cookies[SESSION_NAME])
+  return session
+
+# redirect proc
+proc redirect*(url: string): HandlerResult =
+  var args = newStringTable()
+  args["location"] = url;
+  var (status, buff) = templateFile("./templates/redirect.html", args)
+  return (status, buff, htmlHeader())
+
+# quote
+func q(s: string):string =
+  return "\"" & s & "\""
 
 # html header
 func htmlHeader*(): HttpHeaders =
@@ -139,7 +225,7 @@ func octedHeader*(): HttpHeaders =
 #
 
 # hello
-proc get_hello*(): (HttpCode, string, HttpHeaders) =
+proc get_hello*(): HandlerResult =
   result = (Http200, "Hello World!", textHeader())
 
 # execute CGI
@@ -152,7 +238,7 @@ proc execCgi*(filepath: string, query: string): (HttpCode, string) =
 
 
 # get_query1
-proc get_query1*(query: string): (HttpCode, string, HttpHeaders) =
+proc get_query1*(query: string): HandlerResult =
   var html = """<!doctype html>
 <html>
  <head>
@@ -171,7 +257,7 @@ proc get_query1*(query: string): (HttpCode, string, HttpHeaders) =
   result = (Http200, content, htmlHeader())
 
 # get_form1
-proc get_form1*(filepath: string, query: string): (HttpCode, string, HttpHeaders) =
+proc get_form1*(filepath: string, query: string): HandlerResult=
   var args = newStringTable({"result":query})
   if query == "":
     args["id"] = ""
@@ -186,7 +272,7 @@ proc get_form1*(filepath: string, query: string): (HttpCode, string, HttpHeaders
   return (status, buff, htmlHeader())
 
 # post_form2
-proc post_form2*(filepath: string, headers:HttpHeaders, body: string): (HttpCode, string, HttpHeaders) =
+proc post_form2*(filepath: string, headers:HttpHeaders, body: string): HandlerResult =
   var s = ""
   for k, v in headers:
     s &= k
@@ -216,7 +302,7 @@ proc post_form2*(filepath: string, headers:HttpHeaders, body: string): (HttpCode
   return (status, buff, htmlHeader())
 
 # post_form3
-proc post_form3*(filepath: string, headers:HttpHeaders, name: string, body: string, upload_folder:string=""): (HttpCode, string, HttpHeaders) =
+proc post_form3*(filepath: string, headers:HttpHeaders, name: string, body: string, upload_folder:string=""): HandlerResult =
   var s = ""
   for k, v in headers:
     s &= k
@@ -234,7 +320,7 @@ proc post_form3*(filepath: string, headers:HttpHeaders, name: string, body: stri
   return (status, buff, htmlHeader())
 
 # get_path_param
-proc get_path_param*(filepath:string, path:string, headers:HttpHeaders): (HttpCode, string, HttpHeaders) =
+proc get_path_param*(filepath:string, path:string, headers:HttpHeaders): HandlerResult =
   var s = ""
   var res = ""
   for k, v in headers:
@@ -262,19 +348,19 @@ proc get_path_param*(filepath:string, path:string, headers:HttpHeaders): (HttpCo
 
 
 # redirecting
-proc get_redirect*(query: string): (HttpCode, string, HttpHeaders) =
+proc get_redirect*(query: string): HandlerResult =
   var args = parseQuery(query)
   var (status, buff) = templateFile("./templates/redirect.html", args)
   return (status, buff, htmlHeader())
 
 # show message page
-proc get_message*(query: string): (HttpCode, string, HttpHeaders) =
+proc get_message*(query: string): HandlerResult =
   var args = parseQuery(query)
   var (status, buff) = templateFile("./templates/message.html", args)
   return (status, buff, htmlHeader())
 
 # cookie
-proc get_cookie*(headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
+proc get_cookie*(headers: HttpHeaders): HandlerResult =
   var args = newStringTable()
   var cookies: StringTableRef = getCookies(headers)
   var ret_headers = htmlHeader()
@@ -291,7 +377,7 @@ proc get_cookie*(headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
   return (status, buff, ret_headers)
 
 # get_medaka_record
-proc get_medaka_record*(query: string): (HttpCode, string, HttpHeaders) =
+proc get_medaka_record*(query: string): HandlerResult =
   var data = parseQuery(query)
   var id = parseInt(getQueryValue(data, "id", "0"))
   let db = db_sqlite.open("./medaka.db", "", "", "")
@@ -307,7 +393,7 @@ proc get_medaka_record*(query: string): (HttpCode, string, HttpHeaders) =
   return (Http200, buff, textHeader())
   
 # get_medaka_record2
-proc get_medaka_record2*(query: string): (HttpCode, string, HttpHeaders) =
+proc get_medaka_record2*(query: string): HandlerResult =
   var data = parseQuery(query)
   var id = parseInt(getQueryValue(data, "id", "0"))
   let db = db_sqlite.open("./medaka.db", "", "", "")
@@ -321,7 +407,7 @@ proc get_medaka_record2*(query: string): (HttpCode, string, HttpHeaders) =
   return (Http200, $j, jsonHeader())
 
 # post_request_json
-proc post_request_json*(body: string, headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
+proc post_request_json*(body: string, headers: HttpHeaders): HandlerResult =
   var content = newStringTable()
   var status = Http200
   var res = ""
@@ -352,7 +438,7 @@ proc post_request_json*(body: string, headers: HttpHeaders): (HttpCode, string, 
   
   
 # post_request_formdata
-proc post_request_formdata*(body: string, headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
+proc post_request_formdata*(body: string, headers: HttpHeaders): HandlerResult =
   var status = Http200
   var res = ""
   var s = ""
@@ -385,13 +471,13 @@ proc post_request_formdata*(body: string, headers: HttpHeaders): (HttpCode, stri
   return (Http200, $rslt, jsonHeader())
 
 # post_request_arraybuffer
-proc post_request_arraybuffer*(body: string, headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
+proc post_request_arraybuffer*(body: string, headers: HttpHeaders): HandlerResult =
   if headers["content-type"] == "application/octed-stream":
     return (Http200, body, octedHeader())
   raise
 
 # session
-proc post_session*(filepath: string, body: string, headers: HttpHeaders): (HttpCode, string, HttpHeaders) =
+proc post_session*(filepath: string, body: string, headers: HttpHeaders): HandlerResult =
   var args = newStringTable()
   var cookies = getCookies(headers)
   var jn:JsonNode = %* {}
@@ -418,3 +504,26 @@ proc post_session*(filepath: string, body: string, headers: HttpHeaders): (HttpC
   args["sessionList"] = decodeUrl(session)
   let (status, content) = templateFile(filepath, args)
   return (status, content, ret_headers)
+
+# /cookie_proc
+proc cookie_proc*(query:string, headers:HttpHeaders): string =
+  var kv = parseQuery(query)
+  var cookieItems = getCookieItems(headers)
+  cookieItems[kv["name"]] = kv["value"]
+  var ret_headers = htmlHeader()
+  for k, v in cookieItems:
+    setCookieValue(k, v, ret_headers)
+  var content = "{"
+  for k, v in ret_headers:
+    let k1 = q(k)
+    let v1 = q(v)
+    content &= fmt"{k1}={v1}, "
+  content &= "}"
+  return content
+
+# /session_proc
+proc session_proc*(query:string, headers:HttpHeaders): string =
+  var kv = parseQuery(query)
+  setSessionValue(kv["name"], kv["value"], headers)
+  var session = getSessionString(headers)
+  return session

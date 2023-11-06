@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>redirect_proc</title>
+ <link rel="stylesheet" href="/css/style.css" />
+ <script>
+  function jump() {
+    location.href = "/jump?url=" + form1.url.value;
+  }
+ </script>
+</head>
+
+<body>
+ <!-- ヘッダー -->
+ <header class="section">
+  <h1>redirect_proc</h1>
+  <p style="text-align:center;"><a href="/">HOME</a></p>
+ </header>
+
+ <!-- 本文 -->
+ <article class="section">
+  <form class="form" name="form1">
+    <div class="form-row">
+     <label>URL<br><input type="text" id="url" name="url" class="form-control" size="80" value="/index.html"></label>
+    </div>
+    <div class="form-row">
+     <button type="button" class="btn" onclick="jump()"> Jump </button>
+    </div>
+  </form>
+ </article>
+
+ <!-- フッター -->
+ <footer>
+  <p>&nbsp;</p>
+  <p style="text-align:center;"><a href="#top">TOP</a></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+ </footer>
+</body>
+</html>

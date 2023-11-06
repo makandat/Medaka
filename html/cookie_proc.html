@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>cookie_proc</title>
+ <link rel="stylesheet" href="/css/style.css" />
+ <script src="/js/JS365Lib.js"></script>
+ <script>
+  function button1_click() {
+    let name1 = getValue("name");
+    let value1 = getValue("value");
+    fetchJSON("/cookie_proc", { name1:value1 }, "GET", (data) => {
+       setValue("message", JSON.stringify(data));
+    });
+  }
+ </script>
+</head>
+
+<body>
+ <!-- ヘッダー -->
+ <header class="section">
+  <h1>cookie_proc</h1>
+  <p style="text-align:center;"><a href="/">HOME</a></p>
+ </header>
+
+ <!-- 本文 -->
+ <article class="section">
+  <form class="form" name="form1">
+    <div class="form-row">
+     <label>name<br>
+      <input type="text" id="name" name="name" class="form-control" size="40">
+     </label>
+    </div>
+    <div class="form-row">
+     <label>value<br>
+      <input type="text" id="value" name="value" class="form-control" size="80">
+     </label>
+    </div>
+    <div class="form-row">
+     <label>
+      <input type="checkbox" id="remove" name="remove" class="form-control"> remove
+     </label>
+    </div>
+    <div class="form-row2">
+     <button type="button" class="btn-b" id="button1" onclick="button1_click()"> Add / Update </button>
+    </div>
+  </form>
+  <br>
+  <div class="message" id="message"></div>
+ </article>
+
+ <!-- フッター -->
+ <footer>
+  <p>&nbsp;</p>
+  <p style="text-align:center;"><a href="#top">TOP</a></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+ </footer>
+</body>
+</html>
