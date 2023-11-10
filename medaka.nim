@@ -2,9 +2,9 @@
 import std/asynchttpserver
 import std/asyncdispatch
 import std/[files, paths, strtabs, json, mimetypes, strutils, strformat, logging, re]
-import handlers
+import handlers, medaka_procs
 
-const VERSION = "0.3.3"
+const VERSION = "0.5.0"
 const USE_PORT:uint16 = 2024
 const CONFIG_FILE = "medaka.json"
 const LOG_FILE = "medaka.log"
@@ -62,7 +62,7 @@ proc callback(req: Request) {.async.} =
     (status, content, headers) = staticFile(filepath)
   # CGI
   elif req.reqMethod == HttpGet and req.url.path.startsWith("/cgi-bin/"):
-    if handlers.is_windows():
+    if medaka_procs.is_windows():
       content = "<h1>CGI is not supported on Windows.</h1>"
       status = Http400
     else:
@@ -169,8 +169,8 @@ proc callback(req: Request) {.async.} =
       (status, content, headers) = handlers.get_medaka_record2(req.url.query)
   # /jump (redirect)
   elif req.url.path == "/jump":
-    let kv = handlers.parseQuery(req.url.query)
-    (status, content, headers) =  handlers.redirect(kv["url"])
+    let kv = medaka_procs.parseQuery(req.url.query)
+    (status, content, headers) =  medaka_procs.redirect(kv["url"])
   # /cookie_proc
   elif req.url.path == "/cookie_proc":
     headers = textHeader()
@@ -183,7 +183,10 @@ proc callback(req: Request) {.async.} =
   elif req.url.path == "/sendfile":
     var kv = parseQuery(req.url.query)
     let filepath = kv["path"]
-    (status, content, headers) = handlers.sendfile(filepath, req)
+    (status, content, headers) = medaka_procs.sendfile(filepath, req)
+  # /medaka_db
+  elif req.url.path == "/medaka_db":
+    content = handlers.medaka_db(settings["templates"])
   else:
     status = Http403 # Forbidden
     headers = newHttpHeaders({"Content-Type":"text/html"})
