@@ -1,10 +1,10 @@
 # handlers.nim
 import std/asynchttpserver
-import std/[os, strtabs, strformat, strutils, uri, cookies, htmlgen, json, jsonutils, logging, osproc, streams, mimetypes, paths]
+import std/[os, strtabs, strformat, strutils, uri, cookies, htmlgen, json, jsonutils, logging, osproc, streams, mimetypes, paths, re]
 import db_connector/db_sqlite
 import body_parser
 
-const SESSION_NAME = "medaka_session"
+const SESSION_NAME* = "medaka_session"
 
 type
   HandlerResult* = (HttpCode, string, HttpHeaders)
@@ -108,8 +108,8 @@ func getStValue*(hash: StringTableRef, key:string, default:string=""): string =
 proc is_windows*(): bool =
   return dirExists("C:/Windows")
 
-# get cookies
-proc getCookies(headers: HttpHeaders): StringTableRef =
+# getCookies
+proc getCookies*(headers: HttpHeaders): StringTableRef =
   var cookies: StringTableRef = newStringTable()
   for k, v in headers:
     if toLowerAscii(k) == "cookie":
@@ -119,26 +119,27 @@ proc getCookies(headers: HttpHeaders): StringTableRef =
   return cookies
 
 # setCookieValue
-proc setCookieValue(name, value: string, headers: HttpHeaders) =
-  if headers.hasKey("Set-Cookie"):
-    var cookie: string = headers["Set-Cookie"]
-    cookie &= "; {name}=" & encodeUrl(value)
-    headers["Set-Cookie"] = cookie
-  else:
-    headers["Set-Cookie"] = name & "=" & encodeUrl(value)
+proc setCookieValue*(name, value: string, ret_headers: HttpHeaders): HttpHeaders =
+  if name.match(re(r"\w[\w|\d|_]*")):
+    var ret_cookies: seq[string] = @[]
+    for k, v in ret_headers:
+      if k == "Set-Cookie":
+        ret_cookies.add(v)
+    ret_cookies.add(name & "=" & encodeUrl(value))
+    ret_headers["Set-Cookie"] = ret_cookies
+  return ret_headers
 
 # removeCookie
-proc removeCookie(name, value: string, headers: HttpHeaders) =
-  if headers.hasKey("Set-Cookie"):
-    var cookie: string = headers["Set-Cookie"]
-    cookie &= "; {name}=" & encodeUrl(value)
-    headers["Set-Cookie"] = cookie & "; Max-Age=0"
-  else:
-    headers["Set-Cookie"] = name & "=" & encodeUrl(value)  & " Max-Age=0"
+proc removeCookie*(name: string, in_headers: HttpHeaders): HttpHeaders =
+  var ret_headers = newHttpHeaders()
+  if in_headers.hasKey("cookie"):
+    var cookie = fmt"{name}=; max-age=0"
+    ret_headers["set-cookie"] = cookie
+  return ret_headers
 
 # getCookieValue
-proc getCookieValue(name: string, headers: HttpHeaders): string =
-  var cookies = getCookies(headers)
+proc getCookieValue*(name: string, in_headers: HttpHeaders): string =
+  var cookies = getCookies(in_headers)
   if len(cookies) == 0:
     return ""
   elif cookies.hasKey(name):
@@ -147,48 +148,41 @@ proc getCookieValue(name: string, headers: HttpHeaders): string =
     return ""
 
 # getCookieItems
-proc getCookieItems(headers: HttpHeaders): StringTableRef =
+proc getCookieItems*(headers: HttpHeaders): StringTableRef =
   var cookies = getCookies(headers)
   var items = newStringTable()
   for k, v in cookies:
     items[k] = v
   return items
 
-# set session value as string
-proc setSessionValue(name:string, value:string, headers:HttpHeaders) =
-  var cookies1 = getCookies(headers)
-  var session = ""
-  if cookies1.hasKey(SESSION_NAME):
-    session = decodeUrl(cookies1[SESSION_NAME])
-    var kv = parseCookies(session)
-    kv[name] = value
-    session = "{"
-    for k,v in kv:
-      session &= fmt"{k}={v}; "
-    session = session.substr(0, len(session) - 3) & "}"
-    headers["Set-Cookie"] = SESSION_NAME & "=" & encodeUrl(session)
-
-# get session value as string
-proc getSessionValue(name: string, headers:HttpHeaders): string =
-  var cookies = getCookies(headers)
-  var jn:JsonNode = %* {}
-  var session = ""
-  if cookies.hasKey(SESSION_NAME):
-    session = decodeUrl(cookies[SESSION_NAME])
-    if session != "":
-      try:
-        jn = parseJson(session)
-      except:
-        jn = %* {}
-    return jn.getStr(name)
-  else:
+# setSessionValue
+proc setSessionValue*(name:string, value:string, headers:HttpHeaders): string =
+  if not name.match(re(r"\w[\w|\d|_]*")):
     return ""
+  var cookies1: StringTableRef = getCookies(headers)
+  var session = ""
+  var session_value = ""
+  if cookies1.hasKey(SESSION_NAME) and len(cookies1[SESSION_NAME]) > 0:
+    session_value = decodeUrl(cookies1[SESSION_NAME])
+    var jn: JsonNode = parseJson(session_value)
+    jn[name] = % value
+    session = $jn
+  else:
+    session_value = '"' & name & '"' & ':' & '"' & value & '"'
+    session = "{" & session_value & "}"
+  return session
 
-# get session items
-proc getSessionString(headers:HttpHeaders): string =
+# getSessionString
+proc getSessionString*(headers:HttpHeaders): string =
   var cookies = getCookies(headers)
   var session = decodeUrl(cookies[SESSION_NAME])
   return session
+
+# getSessionValue
+proc getSessionValue*(name: string, headers:HttpHeaders): string =
+  var session = getSessionString(headers)
+  var jn = parseJson(session)
+  return $jn[name]
 
 # redirect proc
 proc redirect*(url: string): HandlerResult =
@@ -506,24 +500,22 @@ proc post_session*(filepath: string, body: string, headers: HttpHeaders): Handle
   return (status, content, ret_headers)
 
 # /cookie_proc
-proc cookie_proc*(query:string, headers:HttpHeaders): string =
+proc cookie_proc*(query:string): (string, HttpHeaders) =
   var kv = parseQuery(query)
-  var cookieItems = getCookieItems(headers)
-  cookieItems[kv["name"]] = kv["value"]
-  var ret_headers = htmlHeader()
-  for k, v in cookieItems:
-    setCookieValue(k, v, ret_headers)
-  var content = "{"
-  for k, v in ret_headers:
-    let k1 = q(k)
-    let v1 = q(v)
-    content &= fmt"{k1}={v1}, "
-  content &= "}"
-  return content
+  var name = kv["cpname"]
+  var value = kv["cpvalue"]
+  var ret_headers = textHeader()
+  ret_headers = setCookieValue(name, value, ret_headers)
+  var content = name & "=" & value
+  return (content, ret_headers)
 
 # /session_proc
-proc session_proc*(query:string, headers:HttpHeaders): string =
+proc session_proc*(query:string, headers:HttpHeaders): (string, HttpHeaders) =
   var kv = parseQuery(query)
-  setSessionValue(kv["name"], kv["value"], headers)
-  var session = getSessionString(headers)
-  return session
+  var ret_headers = newHttpHeaders()
+  if kv.hasKey("name") and kv.hasKey("value"):
+    var session = setSessionValue(kv["name"], kv["value"], headers)
+    ret_headers["Set-Cookie"] = SESSION_NAME & "=" & session.encodeUrl()
+    return (session, ret_headers)
+  else:
+    return ("{\"error\":\"no name\"}", ret_headers)

@@ -7,13 +7,15 @@
  <link rel="stylesheet" href="/css/style.css" />
  <script src="/js/JS365Lib.js"></script>
  <script>
-  clickEvent("button1", () => {
+  function button1_click() {
     let name1 = getValue("name");
-    let value1 = getValue("value");
-    fetchJSON("/session_proc", { name1:value1 }, "GET", (data) => {
-       setValue("message", JSON.stringify(data));
+    let value1 = getValue("value").replaceAll("+", "%2b");
+    fetchText("/session_proc", { "name":name1, "value":value1 }, "GET", (data) => {
+       let data1 = decodeURI(data)
+       let data2 = JSON.stringify(data1).replaceAll("\"", "").replaceAll("\\", "\""); 
+       setValue("message", data2);
     });
-  });
+  }
  </script>
 </head>
 
@@ -39,7 +41,7 @@
     </label>
    </div>
    <div class="form-row2">
-    <button class="btn-b" type="button" id="button1"> Add / Update </button>
+    <button class="btn-b" type="button" id="button1" onclick="button1_click()"> Add / Update </button>
    </div>
   </form>
   <br>

@@ -8,10 +8,10 @@
  <script src="/js/JS365Lib.js"></script>
  <script>
   function button1_click() {
-    let name1 = getValue("name");
-    let value1 = getValue("value");
-    fetchJSON("/cookie_proc", { name1:value1 }, "GET", (data) => {
-       setValue("message", JSON.stringify(data));
+    let name1 = getValue("cpname");
+    let value1 = getValue("cpvalue");
+    fetchText("/cookie_proc", { "cpname":name1, "cpvalue":value1 }, "GET", (data) => {
+       setValue("message", data);
     });
   }
  </script>
@@ -29,12 +29,12 @@
   <form class="form" name="form1">
     <div class="form-row">
      <label>name<br>
-      <input type="text" id="name" name="name" class="form-control" size="40">
+      <input type="text" id="cpname" name="cpname" class="form-control" size="40">
      </label>
     </div>
     <div class="form-row">
      <label>value<br>
-      <input type="text" id="value" name="value" class="form-control" size="80">
+      <input type="text" id="cpvalue" name="cpvalue" class="form-control" size="80">
      </label>
     </div>
     <div class="form-row">

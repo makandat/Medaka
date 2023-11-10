@@ -4,7 +4,7 @@ import std/asyncdispatch
 import std/[files, paths, strtabs, json, mimetypes, strutils, strformat, logging, re]
 import handlers
 
-const VERSION = "0.3.0"
+const VERSION = "0.3.3"
 const USE_PORT:uint16 = 2024
 const CONFIG_FILE = "medaka.json"
 const LOG_FILE = "medaka.log"
@@ -173,12 +173,12 @@ proc callback(req: Request) {.async.} =
     (status, content, headers) =  handlers.redirect(kv["url"])
   # /cookie_proc
   elif req.url.path == "/cookie_proc":
-    headers = jsonHeader()
-    content = handlers.cookie_proc(req.url.query, req.headers)
+    headers = textHeader()
+    (content, headers) = handlers.cookie_proc(req.url.query)
   # /session_proc
   elif req.url.path == "/session_proc":
     headers = jsonHeader()
-    content = handlers.session_proc(req.url.query, req.headers)
+    (content, headers) = handlers.session_proc(req.url.query, req.headers)
   # /sendfile
   elif req.url.path == "/sendfile":
     var kv = parseQuery(req.url.query)
