@@ -4,7 +4,7 @@ import std/asyncdispatch
 import std/[files, paths, strtabs, json, mimetypes, strutils, strformat, logging, re]
 import handlers, medaka_procs
 
-const VERSION = "0.5.0"
+const VERSION = "0.5.4"
 const USE_PORT:uint16 = 2024
 const CONFIG_FILE = "medaka.json"
 const LOG_FILE = "medaka.log"
@@ -41,8 +41,8 @@ proc staticFile(filepath: string): (HttpCode, string, HttpHeaders) =
     result = (Http500, fmt"<h1>Internal error</h1><p>{message}</p>", newHttpHeaders({"Content-Type":"text/html; charset=utf-8"}))
 
 # Callback on Http request
+#   TODO: You must change below, when you create your own application. 
 proc callback(req: Request) {.async.} =
-  # TODO: 
   info(req.url.path)
   echo req.url.path
   var status = Http200
@@ -130,8 +130,11 @@ proc callback(req: Request) {.async.} =
     filepath = htdocs & "/post_request_arraybuffer.html"
     (status, content, headers) = staticFile(filepath)
   # POST /post_request_arraybuffer
-  elif req.reqMethod == HttpPost and req.url.path == "/post_request_formdata":
+  elif req.reqMethod == HttpPost and req.url.path == "/post_request_arraybuffer":
     (status, content, headers) = handlers.post_request_arraybuffer(req.body, req.headers)
+  # POST /post_request_blob
+  elif req.reqMethod == HttpPost and req.url.path == "/post_request_blob":
+    (status, content, headers) = handlers.post_request_blob(req.body)
   #  /redirect
   elif req.url.path == "/redirect":
     filepath = templates & "/redirect.html"
@@ -183,7 +186,7 @@ proc callback(req: Request) {.async.} =
   elif req.url.path == "/sendfile":
     var kv = parseQuery(req.url.query)
     let filepath = kv["path"]
-    (status, content, headers) = medaka_procs.sendfile(filepath, req)
+    (status, content, headers) = medaka_procs.sendfile(filepath)
   # /medaka_db
   elif req.url.path == "/medaka_db":
     content = handlers.medaka_db(settings["templates"])

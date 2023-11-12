@@ -1,0 +1,813 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>medaka README</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+<article class="container">
+<header>
+ <!-- タイトル -->
+ <h1 class="text-center p-5 bg-light rounded">Medaka HTTP サーバ v0.5</h1>
+ <p class="text-center"><a href="/">HOME</a></p>
+ <br>
+ <!-- もくじ -->
+ <h3 class="text-center">もくじ</h3>
+ <div class="row">
+  <div class="col-2">
+    <ul class="list-unstyled">
+     <li><a href="#1 概要">1 概要</a></li>
+     <li><a href="#2 機能">2 機能</a>
+     <li><a href="#2.1 サポートしているリクエスト">2.1 サポートしているリクエスト</a></li>
+     <li><a href="#3 インストール">3 インストール</a></li>
+     <li><a href="#4 ビルド">4 ビルド</a></li>
+     <li><a href="#5 関連ファイル">5 関連ファイル</a></li>
+     <li><a href="#5.1 設定ファイル">5.1 設定ファイル</a></li>
+     <li><a href="#5.2 ログファイル">5.2 ログファイル</a></li>
+     <li><a href="#5.3 ソースファイル">5.3 ソースファイル</a></li>
+     <li><a href="#6 ディレクトリ">6 ディレクトリ</a></li>
+     <li><a href="#7 カスタマイズ">7 カスタマイズ</a></li>
+     <li><a href="#7.1 medaka.nim">7.1 medaka.nim</a></li>
+     <li><a href="#7.2 handlers.nim">7.2 handlers.nim</a></li>
+     <li><a href="#8 テンプレートファイル">8 テンプレートファイル</a></li>
+     <li><a href="#9 静的ファイル">9 静的ファイル</a></li>
+    </ul>
+  </div>
+  <div class="col">
+    <ul class="list-unstyled">
+     <li><a href="#10 proc の解説">10 proc の解説</a></li>
+     <li><a href="#10.1 medaka.nim">10.1 medaka.nim</a></li>
+     <li><a href="#10.1.1 定数">10.1.1 定数</a></li>
+     <li><a href="#readSettings">10.1.2 proc readSettings(): StringTableRef</a></li>
+     <li><a href="#initLogger">10.1.3 proc initLogger()</a></li>
+     <li><a href="#staticFile">10.1.4 proc staticFile(filepath: string): (HttpCode, string, HttpHeaders)</a></li>
+     <li><a href="#callback">10.1.5 proc callback(req: Request) {.async.}</a></li>
+     <li><a href="#10.2 medaka_procs.nim">10.2 medaka_procs.nim</a></li>
+     <li><a href="#10.2.1 定数">10.2.1 定数</a></li>
+     <li><a href="#10.2.2 型">10.2.2 型</a></li>
+     <li><a href="#parseQuery">10.2.3 func parseQuery*(query: string): StringTableRef</a></li>
+     <li><a href="#getQueryValue">10.2.4 func getQueryValue*(hash: StringTableRef, key: string, default: string): string</a></li>
+     <li><a href="#getContentType">10.2.5 func getContentType*(headers: HttpHeaders): string</a></li>
+     <li><a href="#parseBody">10.2.6 proc parseBody*(body: string): StringTableRef</a></li>
+     <li><a href="#parseJsonBody">10.2.7 proc parseJsonBody*(body: string): JsonNode</a></li>
+     <li><a href="#parseArrayBufferBody">10.2.8 func parseArrayBufferBody*(body: string): string</a></li>
+     <li><a href="#parseMultipartBody">10.2.9 func parseMultipartBody*(body: string, headers: HttpHeaders): seq[string]</a></li>
+     <li><a href="#parseFormDataBody">10.2.10 func parseFormDataBody*(body: string, headers: HttpHeaders): seq[string]</a></li>
+     <li><a href="#templateFile">10.2.11 proc templateFile*(filepath: string, args: StringTableRef): (HttpCode, string)</a></li>
+     <li><a href="#getMimetype">10.2.12 func getMimetype*(filepath: string): string</a></li>
+     <li><a href="#sendFile">10.2.13 proc sendFile*(filepath: string): HandlerResult</a></li>
+     <li><a href="#getStValue">10.2.14 func getStValue*(hash: StringTableRef, key:string, default:string=""): string</a></li>
+     <li><a href="#is_windows">10.2.15 proc is_windows*(): bool</a></li>
+     <li><a href="#getCookies">10.2.16 proc getCookies*(headers: HttpHeaders): StringTableRef</a></li>
+     <li><a href="#setCookieValue">10.2.17 proc setCookieValue*(name, value: string, ret_headers: HttpHeaders): HttpHeaders</a></li>
+     <li><a href="#removeCookie">10.2.18 proc removeCookie*(name: string, in_headers: HttpHeaders): HttpHeaders</a></li>
+     <li><a href="#getCookieValue">10.2.19 proc getCookieValue*(name: string, in_headers: HttpHeaders): string</a></li>
+     <li><a href="#getCookieItems">10.2.20 proc getCookieItems*(headers: HttpHeaders): StringTableRef</a></li>
+     <li><a href="#setSessionValue">10.2.21 proc setSessionValue*(name:string, value:string, headers:HttpHeaders): string</a></li>
+     <li><a href="#getSessionValue">10.2.22 proc getSessionValue*(name: string, headers:HttpHeaders): string</a></li>
+     <li><a href="#redirect">10.2.23 proc redirect*(url: string): HandlerResult</a></li>
+     <li><a href="#q">10.2.24 func q*(s: string):string</a></li>
+     <li><a href="#escapeHtml">10.2.25 func escapeHtml*(s: string): string</a></li>
+     <li><a href="#htmlHeader">10.2.26 func htmlHeader*(): HttpHeaders</a></li>
+     <li><a href="#textHeader">10.2.27 func textHeader*(): HttpHeaders</a></li>
+     <li><a href="#jsonHeader">10.2.28 func jsonHeader*(): HttpHeaders</a></li>
+     <li><a href="#octedHeader">10.2.29 func octedHeader*(): HttpHeaders</a></li>
+     <li><a href="#10.3 body_parser.nim">10.3 body_parser.nim</a></li>
+    </ul>
+  </div>
+  <div class="col">
+    <ul class="list-unstyled">
+     <li><a href="#11 サンプルの解説">11 サンプルの解説</a></li>
+
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+     <li><a href="#"></a></li>
+    </ul>
+  </div>
+ </div>
+ <br>
+</header>
+
+<section class="row">
+<!-- 1 概要 -->
+<h2 class="mt-3"><a id="1 概要">1 概要</a></h2>
+<p>"Medaka HTTP Server" は Nim 言語で書かれた HTTP サーバである。</p>
+<p>この HTTP サーバは Nim の標準ライブラリに含まれる asynchttpserver をベースとしている。</p>
+<p>以下では "Medaka HTTP Server" を単に "Medaka" と呼ぶ。</p>
+
+<!-- 2 機能 -->
+<h2 class="mt-3"><a id="2 機能">2 機能</a></h2>
+<p>Medaka は以下のような機能を持つ。</p>
+<ul>
+ <li>HTML ファイルなどの静的なファイルをクライアントへ転送する。</li>
+ <li>URL のパスをフックして独自のハンドラを実行する。</li>
+ <li>CGI を実行する。(制限あり)</li>
+ <li>クッキーを使用可能</li>
+ <li>セッション変数を使用可能 (クッキーベース)</li>
+ <li>ファイルアップロード</li>
+ <li>様々なリクエスト方法をサポート</li>
+</ul>
+
+<!--  2.1 サポートしているリクエスト -->
+<h3 class="mt-3"><a id="2.1 サポートしているリクエスト">2.1 サポートしているリクエスト</a></h3>
+<ul>
+ <li>application/x-www-form-urlencoded</li>
+ <li>multipart/form-data (FormDataオブジェクトを含む)</li>
+ <li>application/json</li>
+ <li>application/octed-stream</li>
+</ul>
+
+<!-- 3 インストール -->
+<h2 class="mt-3"><a id="3 インストール">3 インストール</a></h2>
+<p>次のようにしてインストールできる。</p>
+<blockquote class="blockquote fs-8">　git clone https://github.com/makandat/Medaka.git</blockquote>
+
+<!-- 4 ビルド -->
+<h2 class="mt-3"><a id="4 ビルド">4 ビルド</a></h2>
+<p>Medaka フォルダ内で次のコマンドでビルドする。</p>
+<ul>
+ <li>build.sh medaka (Linux の場合)</li>
+ <li>build.ps1 medaka (Windows の場合)</li>
+</ul>
+
+<!-- 5 関連ファイル -->
+<h2 class="mt-3"><a id="5 関連ファイル">5 関連ファイル</a></h2>
+<!--  5.1 設定ファイル -->
+<h3 class="mt-1"><a id="5.1 設定ファイル">5.1 設定ファイル</a></h3>
+<p>設定ファイルは medaka.json というファイルである。内容は次のようになっている。</p>
+<pre class="border rounded p-1"><code>{
+  "html":"./html",
+  "templates":"./templates",
+  "upload":"./upload",
+  "cgi-bin":"./cgi-bin"
+}
+</code></pre>
+<p>(注意) ポート番号、ログファイル名、設定ファイル名はソースを変更しないと変更できない。</p>
+<ul>
+ <li>html は静的ファイルの場所である。</li>
+ <li>templates はテンプレートファイルの場所である。</li>
+ <li>upload はアップロードファイルの保存先である。</li>
+ <li>cgi-bin は CGI ファイルの場所である。</li>
+</ul>
+
+<!--  5.2 ログファイル -->
+<h3 class="mt-1"><a id="5.2 ログファイル">5.2 ログファイル</a></h3>
+<p>ログファイルは "medaka.log" という名前である。</p>
+
+<!--  5.3 ソースファイル -->
+<h3 class="mt-1"><a id="5.3 ソースファイル">5.3 ソースファイル</a></h3>
+<ul>
+ <li>medaka.nim: メインモジュール</li>
+ <li>medaka_procs.nim: 関連 proc を集めたモジュール</li>
+ <li>handlers.nim: ルートに対応する各ハンドラ用のモジュール</li>
+ <li>body_parser.nim: POST メソッドでのリクエストボディを解析するためのモジュール</li>
+</ul>
+
+
+<!-- 6 ディレクトリ -->
+<h2 class="mt-3"><a id="6 ディレクトリ">6 ディレクトリ</a></h2>
+<ul>
+ <li>html: HTML ファイルの場所</li>
+ <li>html/css: CSS ファイルの場所</li>
+ <li>html/js: JavaScript ファイルの場所</li>
+ <li>html/img: 画像ファイルの場所</li>
+ <li>templates: HTML テンプレートファイルの場所</li>
+ <li>bin: ビルド結果の場所</li>
+ <li>cgi-bin: CGI ファイルの場所</li>
+</ul>
+
+<!-- 7 カスタマイズ -->
+<h2 class="mt-3"><a id="7 カスタマイズ">7 カスタマイズ</a></h2>
+
+<!--  7.1 medaka.nim -->
+<h3 class="mt-1"><a id="7.1 medaka.nim">7.1 medaka.nim</a></h2>
+<p>proc callback(req: Request) ではディスパッチ処理を行っている。</p>
+<p>ここで req.url.path や req.reqMethod を元に呼び出すべきハンドラを決めて、そのハンドラを呼び出す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>#  /hello
+if req.url.path == "/hello":
+  (status, content, headers) = handlers.get_hello()
+</code></pre>
+<p>ハンドラは原則としてタプル (HttpCode, string, HttpHeaders) を返す。</p>
+<p>タプルの2番目の要素が HTML などである。</p>
+
+<!--  7.2 handlers.nim -->
+<h3 class="mt-1"><a id="7.2 handlers.nim">7.2 handlers.nim</h3>
+<p>ハンドラはタプル (HttpCode, string, HttpHeaders) を返す必要がある。</p>
+<p>パラメータについては特に制限はないが、たいていテンプレートファイルのパスやクエリー文字列などを持つ。</p>
+<p>ハンドラは非同期メソッド callback からコールされるのでスレッドセーフである必要がある。</p>
+
+<!-- 8 テンプレートファイル -->
+<h2 class="mt-3"><a id="8 テンプレートファイル">8 テンプレートファイル</h2>
+テンプレートファイルは HTML とほぼ同じである。</p>
+<p>唯一の違いは、埋め込み文字列を表す {{...}} の部分である。</p>
+<p>このカッコ自身とカッコ内のシンボルが外部で与えた文字列で置き換えられる。</p>
+<p>（注意）{{ }} には制御文を書くことはできない。また、HTML エスケープも行われない。</p>
+<p>次にテンプレートファイルの使用例を示す。
+<pre class="border rounded p-1"><code>  var hash = parseQuery(query)
+  args["id"] = getQueryValue(hash, "id", "")
+  args["title"] = getQueryValue(hash, "title", "")
+  args["info"] = getQueryValue(hash, "info", "")
+  var (status, buff) = templateFile(filepath, args)
+  return (status, buff, htmlHeader())
+</code></pre>
+
+<!-- 9 静的ファイル -->
+<h2 class="mt-3"><a id="9 静的ファイル">9 静的ファイル</h2>
+<p>./html フォルダ内のファイルは静的ファイルとして扱われる。静的ファイルとは、HTML ファイル、画像ファイルなどである。</p>
+<p>静的ファイルへのアクセスは他のウェブサーバ同様にアクセスできる。また、index.html ファイルはファイル名を指定せずに開くことができる。</p>
+<p>次の URL はいずれも index.html を開く。</p>
+<ul>
+  <li>http://localhost:2024</li>
+  <li>http://localhost:2024/</li>
+  <li>http://localhost:2024/index.html</li>
+</ul>
+</section>
+
+<section class="row">
+<!-- 10 proc の解説 -->
+<h2 class="mt-3"><a id="10 proc の解説">10 proc の解説</a></h2>
+<!--  10.1 medaka.nim -->
+<h3 class="mt-3"><a id="10.1 medaka.nim">10.1 medaka.nim</a></h3>
+<!--   10.1.1 定数 -->
+<h4 class="fs-5 mt-2"><a id="10.1.1 定数">10.1.1 定数</a></h4>
+<ul class="ms-5">
+ <li>const VERSION = "n.n.n"  # バージョン番号</li>
+ <li>const USE_PORT:uint16 = 2024 # ポート番号</li>
+ <li>const CONFIG_FILE = "medaka.json"  # 設定ファイル</li>
+ <li>const LOG_FILE = "medaka.log"  # ログファイル</li>
+</ul>
+<!--   10.1.2 proc readSettings(): StringTableRef -->
+<h4 class="fs-5 mt-2"><a id="readSettings">10.1.2 proc readSettings(): StringTableRef</a></h4>
+<p>設定ファイル "medaka.json" を読み込んで StringTableRef を返す。(内部使用)</p>
+
+<!--   10.1.3 proc initLogger() -->
+<h4 class="fs-5 mt-2"><a id="initLogger">10.1.3 proc initLogger()</a></h4>
+<p>ロガーを初期化して、ログ関数を使用できるように知り。ログの出力先は "medaka.log" である。(内部使用)</p>
+
+<!--   10.1.4 proc staticFile(filepath: string): (HttpCode, string, HttpHeaders) -->
+<h4 class="fs-5 mt-2"><a id="staticFile">10.1.4 proc staticFile(filepath: string): (HttpCode, string, HttpHeaders)</a></h4>
+<p>filepath で指定した静的ファイルを読み込んでタプル (HttpCode, string, HttpHeaders) を返す。(内部使用)</p>
+
+<!--   10.1.5 proc callback(req: Request) {.async.} -->
+<h4 class="fs-5 mt-2"><a id="callback">10.1.5 proc callback(req: Request) {.async.}</a></h4>
+<p>メインループからコールされる非同期コールバックプロシージャ。(内部使用)</p>
+<p>この proc で req.url.path や req.reqMethod を元にディスパッチ処理を行う。ディスパッチ処理はユーザがカスタマイズを行う。</p>
+
+
+<!--  10.2 medaka_procs.nim -->
+<h3 class="mt-3"><a id="10.2 medaka_procs.nim">10.2 medaka_procs.nim</a></h3>
+<p>このモジュールはハンドラを作るときに使用する proc を保有する。</p>
+<!--   10.2.1 定数 -->
+<h4 class="fs-5 mt-2"><a id="10.2.1 定数">10.2.1 定数</a></h4>
+<pre>const SESSION_NAME* = "medaka_session" # セッションのクッキー名</pre>
+
+<!--   10.2.2 型 -->
+<h4 class="fs-5 mt-2"><a id="10.2.2 型">10.2.2 型</a></h4>
+<pre>type
+  HandlerResult* = (HttpCode, string, HttpHeaders)</pre>
+
+<!--   10.2.3 func parseQuery*(query: string): StringTableRef -->
+<h4 class="fs-5 mt-2"><a id="parseQuery">10.2.3 func parseQuery*(query: string): StringTableRef</a></h4>
+<p>クエリー文字列 (name=value&name=value& ...) をデコードしてキーと値が文字列である辞書に変換する。
+<br>なお、query が URL エンコードされている場合、変換後には URL デコードされた文字列となる。</p>
+<p>例</p>
+<pre class="border rounded p-1"><code>  var hash: StringTableRef = parseQuery("a=Y%20N&b=123.5")
+  echo hash["a"]
+  echo hash["b"]</code></pre>
+<p>結果</p>
+<pre class="border rounded p-1">Y N
+123.5</pre>
+
+<!--   10.2.4 func getQueryValue*(hash: StringTableRef, key: string, default: string): string -->
+<h4 class="fs-5 mt-2"><a id="getQueryValue">10.2.4 func getQueryValue*(hash: StringTableRef, key: string, default: string): string</a></h4>
+<p>func parseQuery*(query: string): StringTableRef の結果である StringTableRef 型の hash からキー key に対する値を得る。
+hash にキーが存在しない場合は default が値として返される。<br>
+この関数は、キーが存在しない可能性がある checkbox 型の値等を得るのに便利である。</p>
+<p>例</p>
+<pre class="border rounded p-1"><code>    var hash: StringTableRef = parseQuery("a=Y%20N&b=123.5")
+    echo hash.getQueryValue("a", "")
+    echo hash.getQueryValue("X", "0")</code></pre>
+<p>結果</p>
+<pre class="border rounded p-1">Y N
+0</pre>
+
+<!--   10.2.5 func getContentType*(headers: HttpHeaders): string -->
+<h4 class="fs-5 mt-2"><a id="getContentType">10.2.5 func getContentType*(headers: HttpHeaders): string</a></h4>
+<p>HttpHeaders 型のパラメータ headers に含まれている Content-Type ヘッダの値を得る。</p>
+<p>例</p><pre class="border rounded p-1"><code>    var headers = newHttpHeaders({"content-type":"image/jpeg", "cookie":"XYZ"})
+    echo getContentType(headers)</code></pre>
+<p>結果</p>
+<pre class="border rounded p-1">image/jpeg</pre>
+
+
+<!--   10.2.6 proc parseBody*(body: string): StringTableRef -->
+<h4 class="fs-5 mt-2"><a id="parseBody">10.2.6 proc parseBody*(body: string): StringTableRef</a></h4>
+<p>application/x-www-form-urlencoded つまり multipart でないフォームをポストしたときのフォームボディを StringTableRef </p>
+<p>例</p><pre class="border rounded p-1"><code>    var body = "key1=Y%20N&key2=-5.84"
+    var hash: StringTableRef = parseBody(body)
+    echo $hash</code></pre>
+<p>結果</p>
+<pre class="border rounded p-1">{key1: Y N, key2: -5.84}</pre>
+
+<!--   10.2.7 proc parseJsonBody*(body: string): JsonNode -->
+<h4 class="fs-5 mt-2"><a id="parseJsonBody">10.2.7 proc parseJsonBody*(body: string): JsonNode</a></h4>
+<p>リクエストの Content-Type が application/json であった場合、body の内容は JSON 形式になる。その場合の body の内容を解析して JsonNode 型の値を返す。</p>
+<p>例</p>
+<pre class="border rounded p-1"><code>    var body = "{\"x\":5.1, \"y\":-0.7}"
+    var jn: JsonNode = parseJsonBody(body)
+    echo $jn</code></pre>
+<p>結果</p>
+<pre class="border rounded p-1">{"x":5.1,"y":-0.7}</pre>
+
+<!--   10.2.8 func parseArrayBufferBody*(body: string): string -->
+<h4 class="fs-5 mt-2"><a id="parseArrayBufferBody">10.2.8 func parseArrayBufferBody*(body: string): string</a></h4>
+<p>この関数は Content-Type が application/octed-stream の場合に使用すること想定している。
+このタイプのデータは純粋なバイナリーデータなので、表示可能なように 16 進数文字列に変換して返す。</p>
+<p>例</p>
+<pre class="border rounded p-1"><code>    var body = "\x45\x0a\x09\x55"
+    var buff = parseArrayBufferBody(body)
+    echo buff</code></pre>
+<p>結果</p>
+<pre class="border rounded p-1">450a0955</pre>
+
+<!--   10.2.9 parseMultipartBody*(body: string, headers: HttpHeaders): seq[string] -->
+<h4 class="fs-5 mt-2"><a id="parseMultipartBody">10.2.9 func parseMultipartBody*(body: string, headers: HttpHeaders): seq[string]</a></h4>
+<p>この関数はリクエストの Content-Type が multipart/form-data である場合のリクエストボディを解析してフォーム要素を文字列配列として返す。</p>
+<p>この文字列配列の要素は、マルチパート境界で分割した dispostion の内容である。</p>
+<p>例</p>
+<pre class="border rounded p-1"><code>    var headerData = {"accept":"text/html", "content-type":"multipart/form-data; boundary=---------------------------26767473973547735812633686047", "content-length":"618"}
+    var headers:HttpHeaders = newHttpHeaders(headerData)
+    var body = """-----------------------------26767473973547735812633686047
+Content-Disposition: form-data; name="id"
+
+ID
+-----------------------------26767473973547735812633686047
+Content-Disposition: form-data; name="info"
+
+INFO
+-----------------------------26767473973547735812633686047--"""
+    var dispos:seq[string] = parseMultipartBody(body, headers)
+    for d in dispos:
+      echo d</code></pre>
+<p>結果</p>
+<pre class="border rounded p-1">
+Content-Disposition: form-data; name="id"
+
+ID
+--
+
+Content-Disposition: form-data; name="info"
+
+INFO
+--</pre>
+
+<!--   10.2.10 func parseFormDataBody*(body: string, headers: HttpHeaders): seq[string] -->
+<h4 class="fs-5 mt-2"><a id="parseFormDataBody">10.2.10 func parseFormDataBody*(body: string, headers: HttpHeaders): seq[string]</a></h4>
+<p>この関数は、クライアントの FormData オブジェクトを含む body を解析して、マルチパート境界でフォームデータを分割した複数文字列を配列として返す。</p>
+<p>FormData オブジェクトの Content-Type は multipart/form-data なので、<u>内部では parseMultipartBody 関数を呼び出しているだけである。</u></p>
+<p>(例は省略)</p>
+
+<!--   10.2.11 proc templateFile*(filepath: string, args: StringTableRef): (HttpCode, string) -->
+<h4 class="fs-5 mt-2"><a id="templateFile">10.2.11 proc templateFile*(filepath: string, args: StringTableRef): (HttpCode, string)</a></h4>
+<p>この proc は、テンプレートファイル filepath の埋め込みマーカ ({{...}}) に args のデータを埋め込んだ文字列を返す。</p>
+<p>ここで filepath はファイル名でなくフルパス名である。args は StringTableRef 型でキーが埋め込む変数名で値が埋め込む変数の値である。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var filePath = "./templates/form1.html"
+    var args = newStringTable({"id":"1", "title":"TITLE", "info":"INFO", "result":"RESULT"})
+    var status:HttpCode
+    var content:string
+    (status, content) = templateFile(filePath, args)
+    echo status
+    echo content</code></pre>
+<p>テンプレートファイル templates/form1.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>medaka get_form1&lt;/title>
+ &lt;!-- BootstrapのCSS読み込み -->
+ &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+ &lt;style>
+.bgcolor {
+    background-color: whitesmoke;
+    border-radius:6px;
+  }
+ &lt;/style>
+ &lt;script src="./js/JS365Lib.js">&lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="container">
+  &lt;h1 class="header-1 bgcolor text-center p-5">medaka get_form1&lt;/h1>
+  &lt;p class="text-center fs-5">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="container">
+   &lt;section class="row">
+    &lt;form name="form1" method="GET" action="/get_form1">
+      &lt;div class="mb-3 mt-5 row">
+       &lt;div class="col-2">
+         &lt;label for="id" class="form-label">Record id&lt;/label>
+         &lt;input type="number" id="id" name="id" class="form-control" value="{{id}}" />
+       &lt;/div>
+      &lt;/div>
+      &lt;div class="mb-3 row">
+       &lt;div class="col-5">
+        &lt;label for="title" class="form-label">Title&lt;/label>
+        &lt;input type="text" id="title" name="title" class="form-control" value="{{title}}" />
+       &lt;/div>
+      &lt;/div>
+      &lt;div class="mb-3">
+        &lt;label for="info" class="form-label">Info&lt;/label>
+        &lt;input type="text" id="info" name="info" class="form-control" value="{{info}}"/>
+      &lt;/div>
+      &lt;div class="mb-3">
+        &lt;input type="submit" class="btn btn-primary" value="送信" />
+      &lt;/div>
+      &lt;div class="mb-3 form-text">{{result}}&lt;/div>
+    &lt;/form>
+   &lt;/section>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer class="container">
+  &lt;p class="text-center mt-4">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&nbsp;&lt;/p>
+ &lt;/footer>
+ &lt;!-- BootstrapのJS読み込み -->
+ &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js">&lt;/script>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1"><code>200 OK
+&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>medaka get_form1&lt;/title>
+ &lt;!-- BootstrapのCSS読み込み -->
+ &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+ &lt;style>
+.bgcolor {
+    background-color: whitesmoke;
+    border-radius:6px;
+  }
+ &lt;/style>
+ &lt;script src="./js/JS365Lib.js">&lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="container">
+  &lt;h1 class="header-1 bgcolor text-center p-5">medaka get_form1&lt;/h1>
+  &lt;p class="text-center fs-5">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="container">
+   &lt;section class="row">
+    &lt;form name="form1" method="GET" action="/get_form1">
+      &lt;div class="mb-3 mt-5 row">
+       &lt;div class="col-2">
+         &lt;label for="id" class="form-label">Record id&lt;/label>
+         &lt;input type="number" id="id" name="id" class="form-control" value="1" />
+       &lt;/div>
+      &lt;/div>
+      &lt;div class="mb-3 row">
+       &lt;div class="col-5">
+        &lt;label for="title" class="form-label">Title&lt;/label>
+        &lt;input type="text" id="title" name="title" class="form-control" value="TITLE" />
+       &lt;/div>
+      &lt;/div>
+      &lt;div class="mb-3">
+        &lt;label for="info" class="form-label">Info&lt;/label>
+        &lt;input type="text" id="info" name="info" class="form-control" value="INFO"/>
+      &lt;/div>
+      &lt;div class="mb-3">
+        &lt;input type="submit" class="btn btn-primary" value="送信" />
+      &lt;/div>
+      &lt;div class="mb-3 form-text">RESULT&lt;/div>
+    &lt;/form>
+   &lt;/section>
+ &lt;/article>
+ &lt;!-- フッター -->
+ &lt;footer class="container">
+  &lt;p class="text-center mt-4">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&nbsp;&lt;/p>
+ &lt;/footer>
+ &lt;!-- BootstrapのJS読み込み -->
+ &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js">&lt;/script>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--   10.2.12 proc getMimetype*(filepath: string):string -->
+<h4 class="fs-5 mt-2"><a id="getMimetype">10.2.12 func getMimetype*(filepath: string): string</a></h4>
+<p>この関数は filepath で指定したファイルの拡張子を元に MIME タイプを取得して関数値として返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var mime: string = getMimetype("./templates/form1.html")
+    echo mime</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">text/html</pre>
+
+<!--   10.2.13 proc sendFile*(filepath: string, req: Request):HandlerResult -->
+<h4 class="fs-5 mt-2"><a id="sendFile">10.2.13 proc sendFile*(filepath: string): HandlerResult</a></h4>
+<p>この関数は filepath で指定したファイルを読み込んで、クライアントへレスポンスとして送信できるようにする。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var filePath = "./templates/form1.html"
+    var status:HttpCode
+    var content:string
+    var headers = newHttpHeaders()
+    (status, content, headers) = sendFile(filepath)
+    echo status
+    echo content
+    echo headers</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">200 OK
+&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ .....
+ .....
+
+{"content-type": @["text/html"]}</pre>
+
+<!--   10.2.14 func getStValue*(hash: StringTableRef, key:string, default:string=""): string -->
+<h4 class="fs-5 mt-2"><a id="getStValue">10.2.14 func getStValue*(hash: StringTableRef, key:string, default:string=""): string</a></h4>
+<p>この関数は StringTable にキーが存在しないときもデフォルト値を返すようにするものである。
+つまり、hash にキー key が存在すれば hask[key] を返し、存在しないときは default を関数値として返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var hash = newStringTable({"key1":"value1"})
+    echo hash.getStValue("key1", "?1")
+    echo hash.getStValue("key0", "?0")</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">value1
+?0</pre>
+
+<!--   10.2.15 proc is_windows*(): bool -->
+<h4 class="fs-5 mt-2"><a id="is_windows">10.2.15 proc is_windows*(): bool</a></h4>
+<p>現在の OS が Windows なら true、そうでないなら false を返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>echo is_windows()</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">true</pre>
+
+<!--   10.2.16 proc getCookies*(headers: HttpHeaders): StringTableRef -->
+<h4 class="fs-5 mt-2"><a id="getCookies">10.2.16 proc getCookies*(headers: HttpHeaders): StringTableRef</a></h4>
+<p>リクエストヘッダからクッキー一覧を取り出し、StringTable として返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var headers: HttpHeaders = newHttpHeaders({"content-type":"multipart/form-data", "cookie":"a=10; b=677"})
+    var hash: StringTableRef = getCookies(headers)
+    echo $hash</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">{b: 677, a: 10}</pre>
+
+<!--   10.2.17 proc setCookieValue*(name, value: string, ret_headers: HttpHeaders): HttpHeaders -->
+<h4 class="fs-5 mt-2"><a id="setCookieValue">10.2.17 proc setCookieValue*(name, value: string, ret_headers: HttpHeaders): HttpHeaders</a></h4>
+<p>レスポンスヘッダ ret_headers にクッキー (name=value) を追加する。結果としてクッキーが追加された ret_headers を返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var headers = newHttpHeaders({"content-type":"text/html"})
+    var ret_headers = setCookieValue("b", "467", headers)
+    echo $ret_headers
+    ret_headers = setCookieValue("c", "8", ret_headers)
+    echo $ret_headers</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">{"set-cookie": @["b=467"], "content-type": @["text/html"]}
+{"set-cookie": @["b=467", "c=8"], "content-type": @["text/html"]}</pre>
+
+<!--   10.2.18 proc removeCookie*(name: string, in_headers: HttpHeaders): HttpHeaders -->
+<h4 class="fs-5 mt-2"><a id="removeCookie">10.2.18 proc removeCookie*(name: string, in_headers: HttpHeaders): HttpHeaders</a></h4>
+<p>リクエストヘッダ in_headers のクッキーヘッダ ("cookie: ...") に含まれる name で指定されるクッキーを削除するためのレスポンスヘッダを返す。
+クッキーの削除はそのクッキーの Max-Age 属性を 0 にすることにより行う。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var headers = newHttpHeaders({"content-type":"text/html", "cookie":"a=A, b=BB"})
+    var headers2 = removeCookie("a", headers)
+    echo $headers2</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">{"set-cookie": @["a=; max-age=0"]}</pre>
+
+<!--   10.2.19 proc getCookieValue*(name: string, in_headers: HttpHeaders): string -->
+<h4 class="fs-5 mt-2"><a id="getCookieValue">10.2.19 proc getCookieValue*(name: string, in_headers: HttpHeaders): string</a></h4>
+<p>リクエストヘッダ in_headers にクッキーが含まれる場合、name で指定されたクッキーの値を取得する。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var headers = newHttpHeaders({"content-type":"text/html", "cookie":"a=A; b=BB"})
+    echo getCookieValue("a", headers)
+    echo getCookieValue("b", headers)</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">A
+BB</pre>
+
+<!--   10.2.20 proc getCookieItems*(headers: HttpHeaders): StringTableRef -->
+<h4 class="fs-5 mt-2"><a id="getCookieItems">10.2.20 proc getCookieItems*(headers: HttpHeaders): StringTableRef</a></h4>
+<p>この proc は getCookies と同じで、リクエストヘッダ headers に含まれるクッキー一覧を StringTableRef として返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var headers = newHttpHeaders({"content-type":"text/html", "cookie":"a=A; b=BB"})
+    var cookies: StringTableRef = getCookieItems(headers)
+    echo cookies</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">{b: BB, a: A}</pre>
+
+<!--   10.2.21 proc setSessionValue*(name:string, value:string, headers:HttpHeaders): string -->
+<h4 class="fs-5 mt-2"><a id="setSessionValue">10.2.21 proc setSessionValue*(name:string, value:string, headers:HttpHeaders): string</a></h4>
+<p>セッション変数はクッキー "medaka_session" の値である。この値は、JSON 形式の文字列で URL エンコードされている。
+この proc は JSON データに "name":"value" を追加する。</p>
+<p></p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var headers = newHttpHeaders()
+    var session = setSessionValue("x1", "0.5", headers)
+    echo session
+    headers["cookie"] = SESSION_NAME & "=" & session
+    session = setSessionValue("y1", "5.0", headers)
+    echo session
+    headers["cookie"] = SESSION_NAME & "=" & session.encodeUrl()
+    echo headers</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">{"x1":"0.5"}
+{"x1":"0.5","y1":"5.0"}
+{"cookie": @["medaka_session=%7B%22x1%22%3A%220.5%22%2C%22y1%22%3A%225.0%22%7D"]}</pre>
+
+<!--   10.2.22 proc getSessionValue*(name: string, headers:HttpHeaders): string -->
+<h4 class="fs-5 mt-2"><a id="getSessionValue">10.2.22 proc getSessionValue*(name: string, headers:HttpHeaders): string</a></h4>
+<p>この proc はリクエストヘッダのクッキーに "medaka_session" という名前が含まれている場合、そのクッキー値 (JSON 形式) のキーが name であるようなオブジェクト値を返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var headers = newHttpHeaders({"cookie":"medaka_session=%7B%22x1%22%3A%220.5%22%2C%22y1%22%3A%225.0%22%7D"})
+    echo getSessionValue("x1", headers)
+    echo getSessionValue("y1", headers)</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">"0.5"
+"5.0"</pre>
+
+<!--   10.2.23 proc redirect*(url: string): HandlerResult -->
+<h4 class="fs-5 mt-2"><a id="redirect">10.2.23 proc redirect*(url: string): HandlerResult</a></h4>
+<p>この proc は url で指定された URL を開くための HandlerResult を返す。
+この proc を実行すると ./templates/redirect.html を使用する。このテンプレートファイルの埋め込み文字列 {{location}} に URL を埋め込むことによりリダイレクトを行う。</p>
+<p>./templates/redirect.html の内容は次のようになっている。</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html>
+ &lt;head>
+  &lt;meta charset="utf-8">
+  &lt;title>Redirecting ..&lt;/title>
+  &lt;link rel="stylesheet" href"/css/style.css">
+  &lt;script>
+   function onload() {
+     location.href = "{{location}}";
+   }
+  &lt;/script>
+ &lt;/head>
+
+ &lt;body onload="onload()">
+  &lt;h1>Redirecting ..&lt;/h1>
+ &lt;/body>
+&lt;/html></code></pre>
+
+<p>(例)</p>
+<pre class="border rounded p-1"><code>    var status = Http200
+    var content = ""
+    var headers = htmlHeader()
+    (status, content, headers) = redirect("http://localhost:2024/sample.html")
+    echo status
+    echo content
+    echo headers</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">200 OK
+&lt;!DOCTYPE html>
+&lt;html>
+ &lt;head>
+  &lt;meta charset="utf-8">
+  &lt;title>Redirecting ..&lt;/title>
+  &lt;link rel="stylesheet" href"/css/style.css">
+  &lt;script>
+   function onload() {
+     location.href = "http://localhost:2024/sample.html";
+   }
+  &lt;/script>
+ &lt;/head>
+
+ &lt;body onload="onload()">
+  &lt;h1>Redirecting ..&lt;/h1>
+ &lt;/body>
+&lt;/html>
+
+{"content-type": @["text/html; charset=utf-8"]}</pre>
+
+<!--   10.2.24 func q*(s: string):string -->
+<h4 class="fs-5 mt-2"><a id="q">10.2.24 func q*(s: string):string</a></h4>
+<p>この関数はパラメータ s を二重引用符で囲んだ文字列を返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>echo q("Hello World!")</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">"Hello World!"</pre>
+
+<!--   10.2.25 func escapeHtml*(s: string): string -->
+<h4 class="fs-5 mt-2"><a id="escapeHtml">10.2.25 func escapeHtml(s: string): string</a></h4>
+<p>この関数は '&', '&lt;', '&gt;' をそれぞれ "&amp;amp;", "&amp;lt;", "&amp;gt;" に変換する。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>echo escapeHtml*("&lt;p&gt;Hello &amp; World&lt;/p&gt;")</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">&amp;lt;p&amp;gt;Hello &amp;amp; World&amp;lt;/p&amp;gt;</pre>
+
+<!--   10.2.26 func htmlHeader*(): HttpHeaders -->
+<h4 class="fs-5 mt-2"><a id="htmlHeader">10.2.26 func htmlHeader*(): HttpHeaders</a></h4>
+<p>この関数は HTML 用の HTTP ヘッダを返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>echo htmlHeader()</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">{"content-type": @["text/html; charset=utf-8"]}</pre>
+
+<!--   10.2.27 func textHeader*(): HttpHeaders -->
+<h4 class="fs-5 mt-2"><a id="textHeader">10.2.27 func textHeader*(): HttpHeaders</a></h4>
+<p>この関数は テキスト用の HTTP ヘッダを返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>echo textHeader()</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">{"content-type": @["text/plain; charset=utf-8"]}</pre>
+
+<!--   10.2.28 func jsonHeader*(): HttpHeaders -->
+<h4 class="fs-5 mt-2"><a id="jsonHeader">10.2.28 func jsonHeader*(): HttpHeaders</a></h4>
+<p>この関数は JSON 用の HTTP ヘッダを返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>echo jsonHeader()</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">{"content-type": @["application/json; charset=utf-8"]}</pre>
+
+<!--   10.2.29 func octedHeader*(): HttpHeaders -->
+<h4 class="fs-5 mt-2"><a id="octedHeader">10.2.29 func octedHeader*(): HttpHeaders</a></h4>
+<p>この関数は バイナリーデータ用の HTTP ヘッダを返す。</p>
+<p>(例)</p>
+<pre class="border rounded p-1"><code>echo octedHeader()</code></pre>
+<p>(結果)</p>
+<pre class="border rounded p-1">{"content-type": @["application/octed-stream"]}</pre>
+
+
+<!--  10.3 body_parser.nim -->
+<h3 class="mt-3"><a id="10.3 body_parser.nim">10.3 body_parser.nim</a></h3>
+<p>このモジュールはマルチパートデータの解析に使う proc を持つが、直接、使用するのではなく medaka_procs.nim の proc からコールされる。</p>
+
+<h4 class="fs-5 mt-2"><a id="getBoundary">10.3.1 proc getBoundary*(headers: HttpHeaders): string</a></h4>
+<p>HttpHeaders の Content-Type が multipart/form-data の場合、データを分割する境界文字列を取り出して戻り値として返す。</p>
+
+<h4 class="fs-5 mt-2"><a id="getDispositions">10.3.2proc getDispositions*(body: string, boundary: string): seq[string]</a></h4>
+<p>Content-Type が multipart/form-data の場合、境界線で分割したそれぞれの部分を配列として返す。</p>
+
+<h4 class="fs-5 mt-2"><a id="isWithChunk">10.3.3 proc isWithChunk*(disposition: string): bool</a></h4>
+<p>HttpHeaders の Content-Type が multipart/form-data の場合、分割された部分が
+
+<h4 class="fs-5 mt-2"><a id="getDispositionName">10.3.4 proc getDispositionName*(disposition: string): string</a></h4>
+<p>パラメータ disposition で与えた境界線で分割された部分の名前を取得する。</p>
+
+<h4 class="fs-5 mt-2"><a id="getDispositionValue">10.3.5 proc getDispositionValue*(disposition: string): string</a></h4>
+<p>パラメータ disposition で与えた境界線で分割された部分の値を取得する。ただし、値がファイルデータではないものとする。</p>
+
+<h4 class="fs-5 mt-2"><a id="getDispositionFileName">10.3.6 proc getDispositionFileName*(disposition: string): string</a></h4>
+<p>パラメータ disposition で与えた境界線で分割された部分のファイル名を取得する。ただし、disposition がファイルデータであるものとする。</p>
+
+<h4 class="fs-5 mt-2"><a id="getDispositionChunk">10.3.7 proc getDispositionChunk*(disposition: string): string</a></h4>
+<p>パラメータ disposition で与えた境界線で分割された部分のファイルデータを取得する。ただし、disposition がファイルデータであるものとする。</p>
+
+<h4 class="fs-5 mt-2"><a id="body_parser.getValue">10.3.8 proc getValue*(dispositions: seq[string], name:string): string</a></h4>
+<p>HttpHeaders の Content-Type が multipart/form-data の場合、境界線で分割された部分の配列 dispositions から名前 name に対応する値を取得する。
+ただし、データはファイルデータでないものとする。</p>
+
+<h4 class="fs-5 mt-2"><a id="getChunk">10.3.9 proc getChunk*(dispositions: seq[string], name:string): string</a></h4>
+<p>HttpHeaders の Content-Type が multipart/form-data の場合、境界線で分割された部分の配列 dispositions から名前 name に対応する値を取得する。
+ただし、データはファイルデータであるものとする。</p>
+
+<h4 class="fs-5 mt-2"><a id="getFileName">10.3.10 proc getFileName*(dispositions: seq[string], name:string): string</a></h4>
+<p>HttpHeaders の Content-Type が multipart/form-data の場合、境界線で分割された部分の配列 dispositions から名前 name に対応するファイル名を取得する。
+ただし、データはファイルデータであるものとする。</p>
+
+</section>
+<br>
+<section class="row">
+<!-- 11 サンプルの解説 -->
+<h2 class="mt-3"><a id="11 サンプルの解説">11 サンプルの解説</a></h2>
+</section>
+
+<footer class="row mt-5 mb-5">
+  <p class="text-center"><a href="#top">TOP</a></p>
+</footer>
+</article>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width,initial-scale=1" />
+ <title>post_request_blob</title>
+ <link rel="stylesheet" href="/css/style.css" />
+ <script src="/js/JS365Lib.js"></script>
+ <script>
+  function query() {
+    let path = getValue("path");
+    if (path == "")
+      alert("id is empty.");
+    else
+      if (path.startsWith('"'))
+        path = path.substring(1, path.length - 1)
+      path = path.replaceAll("\\", "/")
+      fetchBLOB("/post_request_blob", {"path":path}, "POST", "text", (data) => {
+          setValue("result", data);
+      });
+  }
+ </script>
+</head>
+
+<body>
+ <!-- ヘッダー -->
+ <header>
+  <h1 class="frame">post_request_blob</h1>
+   <p style="text-align:center;"><a href="/">HOME</a></p>
+ </header>
+
+ <!-- 本文 -->
+ <article class="section">
+  <form id="form1" name="form1" class="form">
+    <div class="form-row">
+      <label>path (Text file)<br><input type="text" id="path" name="path" class="form-control" size="100"></label>
+    </div>
+    <div class="form-row">
+      <button type="button" class="btn" onclick="javascript:query()"> 送信 </button>
+    </div>
+  </form>
+  <h3>Result</h3>
+  <p id="result" style="font-size:small;"></p>
+ </article>
+
+ <!-- フッター -->
+ <footer>
+  <p>&nbsp;</p>
+  <p style="text-align:center;"><a href="#top">TOP</a></p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+ </footer>
+</body>
+</html>

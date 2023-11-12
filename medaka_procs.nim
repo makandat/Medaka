@@ -1,7 +1,6 @@
 # medaka_procs.nim
 import std/asynchttpserver
-import std/[os, strtabs, strformat, strutils, uri, cookies, htmlgen, json, jsonutils, logging, osproc, streams, mimetypes, paths, re, htmlgen]
-import db_connector/db_sqlite
+import std/[os, strtabs, strformat, strutils, uri, cookies, json, logging, mimetypes, paths, re]
 import body_parser
 
 const SESSION_NAME* = "medaka_session"
@@ -43,7 +42,11 @@ proc parseJsonBody*(body: string): JsonNode =
 
 # parse arraybuffer body (application/octed-stream)
 func parseArrayBufferBody*(body: string): string =
-  return body  # pure binary data
+  var buff = ""
+  for i in 0..<len(body):
+    var b:byte = byte(body[i])
+    buff &= fmt"{b:02x}"
+  return buff
 
 # parse mulitipart body
 func parseMultipartBody*(body: string, headers: HttpHeaders): seq[string] =
@@ -65,15 +68,6 @@ proc templateFile*(filepath: string, args: StringTableRef): (HttpCode, string) =
     let message = e.msg
     result = (Http500, fmt"<h1>Internal error</h1><p>{message}</p>")
 
-# octed-stream to hex string
-proc hexDump*[T](v: T): string =
-  var s: seq[uint8] = @[]
-  s.setLen(v.sizeof)
-  copymem(addr(s[0]), v.unsafeAddr, v.sizeof)
-  result = ""
-  for i in s:
-    result.add(i.toHex)
-
 # get mime type
 func getMimetype*(filepath: string): string =
   let m = newMimetypes()
@@ -83,7 +77,7 @@ func getMimetype*(filepath: string): string =
   return mime
 
 # send file
-proc sendFile*(filepath: string, req: Request):HandlerResult  =
+proc sendFile*(filepath: string):HandlerResult  =
   var status: HttpCode = Http200
   var content = ""
   var headers = newHttpHeaders()
@@ -123,10 +117,10 @@ proc setCookieValue*(name, value: string, ret_headers: HttpHeaders): HttpHeaders
   if name.match(re(r"\w[\w|\d|_]*")):
     var ret_cookies: seq[string] = @[]
     for k, v in ret_headers:
-      if k == "Set-Cookie":
+      if k.toLowerAscii() == "set-cookie":
         ret_cookies.add(v)
     ret_cookies.add(name & "=" & encodeUrl(value))
-    ret_headers["Set-Cookie"] = ret_cookies
+    ret_headers["set-cookie"] = ret_cookies
   return ret_headers
 
 # removeCookie
@@ -143,7 +137,7 @@ proc getCookieValue*(name: string, in_headers: HttpHeaders): string =
   if len(cookies) == 0:
     return ""
   elif cookies.hasKey(name):
-    return decodeUrl(cookies[name])
+    return cookies[name]
   else:
     return ""
 
@@ -192,8 +186,12 @@ proc redirect*(url: string): HandlerResult =
   return (status, buff, htmlHeader())
 
 # quote
-func q(s: string):string =
+func q*(s: string):string =
   return "\"" & s & "\""
+
+# escapeHtml proc
+func escapeHtml*(s: string): string =
+  return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 # html header
 func htmlHeader*(): HttpHeaders =
@@ -211,4 +209,131 @@ func jsonHeader*(): HttpHeaders =
 func octedHeader*(): HttpHeaders =
   return newHttpHeaders({"Content-Type":"application/octed-stream"})
 
+
+# start if main (for test)
+when isMainModule:
+  if paramCount() == 0:
+    echo "Enter the test number."
+    quit(1)
+  let tc = parseInt(paramStr(1))
+  case tc
+  of 0:  # parseQuery
+    var hash: StringTableRef = parseQuery("a=Y%20N&b=123.5")
+    echo $hash
+    assert hash["a"] == "Y N"
+    assert hash["b"] == "123.5"
+  of 1:  # getQueryValue
+    var hash: StringTableRef = parseQuery("a=Y%20N&b=123.5")
+    echo hash.getQueryValue("a", "")
+    echo hash.getQueryValue("X", "0")
+  of 2: # getContentType
+    var headers = newHttpHeaders({"content-type":"image/jpeg", "cookie":"XYZ"})
+    echo getContentType(headers)
+  of 3: # parseBody only application/x-www-form-urlencoded
+    var body = "key1=Y%20N&key2=-5.84"
+    var hash: StringTableRef = parseBody(body)
+    echo $hash
+  of 4: # parseJsonBody
+    var body = "{\"x\":5.1, \"y\":-0.7}"
+    var jn: JsonNode = parseJsonBody(body)
+    echo $jn
+  of 5: # parseArrayBufferBody
+    var body = "\x45\x0a\x09\x55"
+    var buff = parseArrayBufferBody(body)
+    echo buff
+  of 6: # parseMultipartBody
+    var headerData = {"accept":"text/html", "content-type":"multipart/form-data; boundary=---------------------------26767473973547735812633686047", "content-length":"618"}
+    var headers:HttpHeaders = newHttpHeaders(headerData)
+    var body = """-----------------------------26767473973547735812633686047
+Content-Disposition: form-data; name="id"
+
+ID
+-----------------------------26767473973547735812633686047
+Content-Disposition: form-data; name="info"
+
+INFO
+-----------------------------26767473973547735812633686047--"""
+    var dispos:seq[string] = parseMultipartBody(body, headers)
+    for d in dispos:
+      echo d
+  of 7: # templateFile
+    var filePath = "./templates/form1.html"
+    var args = newStringTable({"id":"1", "title":"TITLE", "info":"INFO", "result":"RESULT"})
+    var status:HttpCode
+    var content:string
+    (status, content) = templateFile(filePath, args)
+    echo status
+    echo content
+  of 8: # getMimetype
+    var mime: string = getMimetype("./templates/form1.html")
+    echo mime
+  of 9: # sendFile
+    var filePath = "./templates/form1.html"
+    var status:HttpCode
+    var content:string
+    var headers = newHttpHeaders()
+    (status, content, headers) = sendFile(filepath)
+    echo status
+    echo content
+    echo headers
+  of 10: # getStValue
+    var hash = newStringTable({"key1":"value1"})
+    echo hash.getStValue("key1", "?1")
+    echo hash.getStValue("key0", "?0")
+  of 11: # is_windows
+    echo is_windows()
+  of 12: # getCookies
+    var headers: HttpHeaders = newHttpHeaders({"content-type":"multipart/form-data", "cookie":"a=10; b=677"})
+    var hash: StringTableRef = getCookies(headers)
+    echo $hash
+  of 13: # setCookieValue
+    var headers = newHttpHeaders({"content-type":"text/html"})
+    var ret_headers = setCookieValue("b", "467", headers)
+    echo $ret_headers
+    ret_headers = setCookieValue("c", "8", ret_headers)
+    echo $ret_headers
+  of 14: # removeCookie
+    var headers = newHttpHeaders({"content-type":"text/html", "cookie":"a=A; b=BB"})
+    var headers2 = removeCookie("a", headers)
+    echo $headers2
+  of 15: # getCookieValue
+    var headers = newHttpHeaders({"content-type":"text/html", "cookie":"a=A; b=BB"})
+    echo getCookieValue("a", headers)
+    echo getCookieValue("b", headers)
+  of 16: # getCookieItems
+    var headers = newHttpHeaders({"content-type":"text/html", "cookie":"a=A; b=BB"})
+    var cookies: StringTableRef = getCookieItems(headers)
+    echo cookies
+  of 17: # setSessionValue
+    var headers = newHttpHeaders()
+    var session = setSessionValue("x1", "0.5", headers)
+    echo session
+    headers["cookie"] = SESSION_NAME & "=" & session
+    session = setSessionValue("y1", "5.0", headers)
+    echo session
+    headers["cookie"] = SESSION_NAME & "=" & session.encodeUrl()
+    echo headers
+  of 18: # getSeesionValue
+    var headers = newHttpHeaders({"cookie":"medaka_session=%7B%22x1%22%3A%220.5%22%2C%22y1%22%3A%225.0%22%7D"})
+    echo getSessionValue("x1", headers)
+    echo getSessionValue("y1", headers)
+  of 19: # redirect
+    var status = Http200
+    var content = ""
+    var headers = htmlHeader()
+    (status, content, headers) = redirect("http://localhost:2024/sample.html")
+    echo status
+    echo content
+    echo headers
+  of 20: # q
+    echo q("Hello World!")
+  of 21: # escapeHtml
+    echo escapeHtml("<p>Hello & World</p>")
+  of 22: # htmlHeader, textHeader, jsonHeader, octedHeader
+    echo htmlHeader()
+    echo textHeader()
+    echo jsonHeader()
+    echo octedHeader()
+  else:
+    echo "Not allowed."
 

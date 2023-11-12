@@ -1,9 +1,10 @@
 #
 # handlers.nim
+#   TODO: You can change this sample, if you create your own application.
 #
 import medaka_procs
 import std/asynchttpserver
-import std/[os, strtabs, strformat, strutils, uri, cookies, htmlgen, json, jsonutils, logging, osproc, streams, mimetypes, paths, re, htmlgen]
+import std/[strtabs, strformat, strutils, uri, htmlgen, json, osproc, streams, htmlgen]
 import db_connector/db_sqlite
 import body_parser
 
@@ -258,6 +259,17 @@ proc post_request_arraybuffer*(body: string, headers: HttpHeaders): HandlerResul
   if headers["content-type"] == "application/octed-stream":
     return (Http200, body, octedHeader())
   raise
+
+# post_request_blob
+proc post_request_blob*(body: string): HandlerResult =
+  var status = Http200
+  var ret_headers = newHttpHeaders({"content-type": "text/plain; charset=utf-8"})
+  var args = medaka_procs.parseQuery(body)
+  echo args["path"]
+  let rstrm = newFileStream(args["path"], fmRead)
+  var content = rstrm.readAll()
+  rstrm.close()
+  return (status, content, ret_headers)
 
 # session
 proc post_session*(filepath: string, body: string, headers: HttpHeaders): HandlerResult =
