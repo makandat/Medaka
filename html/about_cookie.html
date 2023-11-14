@@ -1,0 +1,104 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>about cookie</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+<article class="container">
+<header>
+ <!-- タイトル -->
+ <h1 class="text-center p-5 bg-light rounded">クッキーについて</h1>
+ <p class="text-center"><a href="/">HOME</a></p>
+</header>
+
+<section class="row">
+<div class="fixed-top"><a href="#top">TOP</a></div>
+<!-- 1 概要 -->
+<h2 class="mt-3"><a id="1 概要">1 概要</a></h2>
+<p>Nim ではクッキーは <a href="https://nim-lang.org/docs/cookies.html" target="_blank">std/cookies モジュール</a>でサポートされている。
+このモジュールには次の 3 つの proc が含まれている。</p>
+<ol>
+ <li>proc parseCookies(s: string): StringTableRef {.....}</li>
+ <li>proc setCookie(key, value: string; domain = ""; path = ""; expires = "";
+               noName = false; secure = false; httpOnly = false; maxAge = none(int); sameSite = SameSite.Default): string</li>
+ <li>proc setCookie(key, value: string; expires: DateTime | Time; domain = "";
+               path = ""; noName = false; secure = false; httpOnly = false;
+               maxAge = none(int); sameSite = SameSite.Default): string</li>
+</ol>
+<p>parseCookies は、リクエストヘッダの cookie ヘッダを解析して個別のクッキーを取り出して StringTableRef として返す。</p>
+<p>setCookie は、2 種類あるがどちらもレスポンスヘッダのクッキー (set-cookie) を作成する。</p>
+<br>
+
+<!-- 2 クッキーの属性 -->
+<h2>2 クッキーの属性</h2>
+<h3 class="fs-4">domain</h3>
+<p>クッキーをを受信することができるホストを指定する。その際、サブドメインも含まれる。</p>
+
+<h3 class="fs-4">path</h3>
+<p>リクエストされた URL の中に含む必要がある URL のパスを示す。例えば、path=/docs とするとリクエストパスに /docs が含まれている必要がある。</p>
+
+<h3 class="fs-4">expires</h3>
+<p>クッキーはデフォルトではセッションが終了すると自動的に削除される。expires は、そのセッションが期限を「日時」で指定する。(maxAge は持続時間で指定)</p>
+<p>この時刻は次のように指定する。"Expires=Thu, 31 Oct 2021 07:28:00 GMT"</p>
+
+<h3 class="fs-4">noName</h3>
+<p>不明 (HTTP クッキーの属性ではない)</p>
+
+<h3 class="fs-4">secure</h3>
+<p>この属性を true にすると、https プロトコルを使ったアクセスだけにクッキーが有効になる。</p>
+
+<h3 class="fs-4">httpOnly</h3>
+<p>この属性を true にするとクライアント側で JavaScript を使ってクッキーをアクセスできなくなる。</p>
+
+<h3 class="fs-4">maxAge (Max-Age)</h3>
+<p>expires はクッキーの期限を日時で指定するが、maxAge は持続時間 (単位は秒) で指定する。なお、HTTP ヘッダでは "Max-Age" である。
+<br><b>maxAge の時間を 0 にすると、そのクッキーはクライアントから削除される。</b></p>
+
+<h3 class="fs-4">sameSite</h3>
+<p>この属性が "Strict" の場合、他のドメインからのリクエストに対してクッキーをレスポンスヘッダに含めない。
+この属性が "Lax" ならトップレベルナビゲーションかつ GET メソッドならクッキーを含めることができる。(Lax がデフォルト)
+この属性が "None" なら特に制限を受けない。</p>
+<br>
+
+<!-- 3 リクエストヘッダのクッキー -->
+<h2 class="mt-4">3 リクエストヘッダのクッキー</h2>
+<p>クライアントからのリクエストヘッダにはクッキーが含まれることがある。その内容は、現在、クライアントに保存されているクッキーの名前と値である。
+そして、クッキーの属性は含まれない。</p>
+<p>クッキーのヘッダ行のキーは cookie であり、そのヘッダ行にはセミコロンで区切られた複数のクッキーが含まれる。下に例を示す。</p>
+<pre class="ms-2">cookie: name1=value1; name2=value2; name3=value3</pre>
+<p>値が ASCII 文字列でないときは、URL エンコードされる。</p>
+<br>
+
+<!-- 4 レスポンスヘッダのクッキー -->
+<h2 class="mt-4">4 レスポンスヘッダのクッキー</h2>
+<p>クライアントへクッキーを保存するにはレスポンスヘッダに "Set-Cookie" ヘッダ行を追加する。
+このヘッダ行は１つのクッキーに対して１行を割り当てる。</p>
+<p>Set-Cookie 行にはクッキーの値以外にもクッキー属性を追加することができる。次に Set-Cookie 行の例を示す。</p>
+<pre class="ms-2">Set-Cookie: name=value
+Set-Cookie: name=value; Expires=Thu, 31 Oct 2021 07:28:00 GMT
+Set-Cookie: name=value; Domain=example.com; Secure; Max-Age=3600</pre>
+<p>name は空白、タブ、制御文字以外の ASCII 文字を含むことができるが、区切り文字などはあまり使わない方がよい。
+<br>value では ASCII 文字以外は URL エンコードされてクライアントへ送られる。</p>
+<p>Max-Age 属性を 0 にすると、そのクッキーは削除される。<br>Secure 属性を付けると、https プロトコルでのみクッキーが機能する。<br>
+属性は SameSite 属性の値によっては正しく機能しないことがある。</p>
+<br>
+
+</section>
+
+<footer>
+ <p>&nbsp;</p>
+ <p class="text-center"><a href="#top">TOP</a></p>
+ <p>&nbsp;</p>
+ <p>&nbsp;</p>
+</footer>
+</article>
+</body>
+</html>

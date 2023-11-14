@@ -1,12 +1,12 @@
 # test procs of cookie and session
-import std/[asynchttpserver, uri, strtabs, tables, strformat]
-import handlers
+import std/[asynchttpserver, uri, strtabs, strformat]
+import handlers, medaka_procs
 
 # proc getCookies(headers: HttpHeaders): StringTableRef
 block:
   echo "** getCookies(headers: HttpHeaders): StringTableRef"
   var headers = newHttpHeaders({"cookie":"a=AAA; b=bb; xx=XXXX", "content-type":"application/json"})
-  var cookies = handlers.getCookies(headers)
+  var cookies = medaka_procs.getCookies(headers)
   for k in cookies.keys:
     echo k, ":", cookies[k]
 

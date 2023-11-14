@@ -1,0 +1,163 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>about Request</title>
+    <!-- BootstrapのCSS読み込み -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/vs.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+
+<body>
+<article class="container">
+<header>
+ <!-- タイトル -->
+ <h1 class="text-center p-5 bg-light rounded">リクエストについて</h1>
+ <p class="text-center"><a href="/">HOME</a></p>
+</header>
+
+<section class="row">
+<div class="fixed-top"><a href="#top">TOP</a></div>
+<!-- 1 概要 -->
+<h2 class="mt-3"><a id="1 概要">1 概要</a></h2>
+<p>Request オブジェクトは <a href="https://nim-lang.org/docs/asynchttpserver.html" target="_blank">std/asynchttpserver モジュール</a>に含まれ、次のように定義差有れている。</p>
+<pre class="border rounded p-1"><code>Request = object
+  client*: AsyncSocket
+  reqMethod*: HttpMethod
+  headers*: HttpHeaders
+  protocol*: tuple[orig: string, major, minor: int]
+  url*: Uri
+  hostname*: string          ## The hostname of the client that made the request.
+  body*: string</code></pre>
+<p>ここで、AsyncSocket, HttpMethod, HttpHeaders は次のように定義される。</p>
+<pre class="border rounded p-1"><code>type
+  AsyncSocket = ref AsyncSocketDesc
+  HttpMethod = enum
+    HttpHead = "HEAD",
+    HttpGet = "GET",
+    HttpPost = "POST",
+    HttpPut = "PUT",
+    HttpDelete = "DELETE",
+    HttpTrace = "TRACE",
+    HttpOptions = "OPTIONS",
+    HttpConnect = "CONNECT",
+    HttpPatch = "PATCH"
+  HttpHeaders = ref object
+    table*: TableRef[string, seq[string]]
+  Uri = object
+    scheme*, username*, password*: string
+    hostname*, port*, path*, query*, anchor*: string
+    opaque*: bool
+    isIpv6*: bool</code></pre>
+<br>
+
+<!-- 2 Request の使用 -->
+<h2 class="mt-3">2 Request の使用</h2>
+<!--  2.1 リクエストパス (ルート) -->
+<h3 class="mt-2">2.1 リクエストパス (ルート)</h3>
+<p>リクエストのパスは <b>Request.url.path</b> で取得できる。例えば、ブラウザのアドレスバーに http://localhost:2024/hello と入力した場合は、この値は "/hello" となる。</p>
+<!--  2.2 リクエストメソッド -->
+<h3 class="mt-2">2.2 リクエストメソッド</h3>
+<p>リクエストメソッドは、<b>Request.reqMethod</b> で取得できる。例えば、ブラウザのアドレスバーに http://localhost:2024/hello と入力した場合は、この値は HttpGet となる。</p>
+<!--  2.3 ホスト名 -->
+<h3 class="mt-2">2.3 ホスト名</h3>
+<p>リクエストをホスト名で制限する場合、ホスト名が必要になる。ホスト名は <b>Request.url.hostname</b> で取得できる。</p>
+<!--  2.4 クエリーデータ -->
+<h3 class="mt-2">2.4 クエリーデータ</h3>
+<p>HTTP メソッドが GET でクエリーデータがある場合、<b>Request.url.query</b> にクエリーデータが保持される。<br>
+例えば、URL が http://localhost:2024/request?x=0&y=12 なら、Request.url.query は x=0&y=12 になる。ただし、クエリーの値が ASCII 文字でない場合、URL エンコードされている。</p>
+<!--  2.5 ボディデータ -->
+<h3 class="mt-2">2.5 ボディデータ</h3>
+<p>HTTP メソッドが POST の場合、リクエストデータは Request.url.query でなく <b>Request.body</b> に保持されている。
+GET メソッドの場合、クエリーデータの形式は常に application/x-www-form-urlencoded であるが、POST の場合はもっと複雑で次のような形式がある。</p>
+<ul class="ms-3">
+ <li>application/x-www-form-urlencoded -- 通常のフォームでリクエストを行う場合。これは GET メソッドでリクエストを行う場合の Request.url.query と同じ形式である。</li>
+ <li>multipart/form-data -- フォームで enctype="multipart/form-data" を指定した場合や FormData オブジェクトを使って
+リクエストを行う場合、リクエストボディは multipart/form-data (複数の境界を持つフォームデータ) とみなされる。</li>
+ <li>application/json -- リクエストヘッダの content-type で application/json を指定した場合、リクエストボディは JSON 形式とみなされる。</li>
+ <li>application/octed-stream -- リクエストヘッダの content-type で application/octed-stream を指定した場合、
+リクエストボディは ArrayBuffer とみなされる。この場合、データは URL エンコードされず純粋なバイナリーデータとなる。</li>
+</ul>
+<p>ボディデータの形式が何なのかは、リクエストのパスなどでわかるが、リクエストヘッダの content-type でも知ることができる。例えば、ボディデータが JSON なら application/json になる。</p>
+
+<!--  2.6 マルチパートフォームデータの詳細 -->
+<h3 class="mt-2">2.6 マルチパートフォームデータの詳細</h3>
+<p>マルチパートフォームデータは他のデータ形式より複雑である。</p>
+<!--   2.6.1 境界線の取得 -->
+<h4 class="fs-4">2.6.1 境界線の取得</h4>
+<p>マルチパートフォームデータは境界線で分割されている。境界線はリクエストごとに異なり、またブラウザエンジンにより形式が異なる。</p>
+<p>境界線は<b>リクエストヘッダの content-type ヘッダ</b>で定義されている。ブラウザエンジンが Mozilla (Firefox) の場合は次のようになる。<p>
+<pre class="ms-5">content-type: multipart/form-data; boundary=---------------------------323530250721239011212765416286</pre>
+<p>一方、ブラウザエンジンが Webkit (Chrome など) の場合は次のようになる。</p>
+<pre class="ms-5">content-type: multipart/form-data; boundary=----WebKitFormBoundaryVinebUIzUE7i7Oy1</pre>
+<p>ただし、実際の境界線はこの内容より少し長く２つの '-' が追加される。つまり "------WebKitFormBoundaryVinebUIzUE7i7Oy1" などになる。</p>
+<h4 class="fs-4">2.6.2 ボディの内容</h4>
+<p>次にマルチパートフォーム (あるいは FormData オブジェクト) のボディの例を示す。XXXX...XX はアップロードされたファイル内容で純粋なバイナリーデータである。</p>
+<p>Content-Disposition: form-data; name="title" などはフォームコントロールの name 属性の値である。</p>
+<p>Content-Type はアップロードされたファイルデータの形式で普通は、application/octet-stream である。これは純粋なバイナリーデータであることを意味する。</p>
+<p>最後の境界線は、２つの '-' が最後に追加されて、もうデータがないことを示している。</p>
+<p>空行は改行 (0x0a) のみからなる行である。</p>
+<p>この例で 2 番目の部分は name="title" で value="TITLE" で、2 番目の部分は name="info" で value="" (空欄) である。</p>
+
+<pre class="border">------WebKitFormBoundaryVinebUIzUE7i7Oy1
+Content-Disposition: form-data; name="file1"; filename="picture.png"
+Content-Type: application/octet-stream
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+------WebKitFormBoundaryVinebUIzUE7i7Oy1
+Content-Disposition: form-data; name="title"
+
+TITLE
+------WebKitFormBoundaryVinebUIzUE7i7Oy1
+Content-Disposition: form-data; name="info"
+
+
+------WebKitFormBoundaryVinebUIzUE7i7Oy1--
+</pre>
+
+<p>このデータの送信元のフォームは次のようになっている。</p>
+<pre class="border rounded p-1"><code>  &lt;form method="POST" enctype="multipart/form-data" action="/post_form3">
+    &lt;div class="row mb-3">
+     &lt;div class="col-5">
+      &lt;label for="file1" class="form-label">file1&lt;/label>
+      &lt;input type="file" class="form-control" name="file1" id="file1">
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+     &lt;div class="col-4">
+      &lt;label for="title" class="form-label">title&lt;/label>
+      &lt;input type="text" class="form-control" name="title" id="title">
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+     &lt;div class="col-6">
+      &lt;label for="info" class="form-label">info&lt;/label>
+      &lt;input type="text" class="form-control" name="info" id="info">
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+      &lt;div class="col-1">
+       &lt;input type="submit" class="btn btn-primary" value="送信">
+      &lt;/div>
+    &lt;/div>
+   &lt;/form>
+</code></pre>
+</section>
+
+<footer>
+ <p>&nbsp;</p>
+ <p class="text-center"><a href="#top">TOP</a></p>
+ <p>&nbsp;</p>
+ <p>&nbsp;</p>
+</footer>
+
+</article>
+</body>
+</html>

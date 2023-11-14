@@ -1,6 +1,6 @@
 # body_parser
 import std/asynchttpserver
-import std/[strutils, strformat, uri]
+import std/[strutils, uri]
 
 var headers: HttpHeaders
 

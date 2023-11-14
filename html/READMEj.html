@@ -42,7 +42,7 @@
   </div>
   <div class="col">
     <ul class="list-unstyled">
-     <li><a href="#10 proc の解説">10 proc の解説</a></li>
+     <li class="fs-4"><a href="#10 proc の解説">10 proc の解説</a></li>
      <li><a href="#10.1 medaka.nim">10.1 medaka.nim</a></li>
      <li><a href="#10.1.1 定数">10.1.1 定数</a></li>
      <li><a href="#readSettings">10.1.2 proc readSettings(): StringTableRef</a></li>
@@ -84,19 +84,30 @@
   </div>
   <div class="col">
     <ul class="list-unstyled">
-     <li><a href="#11 サンプルの解説">11 サンプルの解説</a></li>
-
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
-     <li><a href="#"></a></li>
+     <li class="fs-4"><a href="#11 サンプルの解説">11 サンプルの解説</a></li>
+     <li><a href="#11.1 medaka.nim">11.1 medaka.nim</a></li>
+     <li><a href="#11.2 handlers.nim">11.2 handlers.nim</a></li>
+     <li><a href="#/hello">11.2.1 /hello</a></li>
+     <li><a href="#/get_query1">11.2.2 /get_query1</a></li>
+     <li><a href="#/get_form1">11.2.3 /get_form1 (GET form)</a></li>
+     <li><a href="#/post_form2">11.2.4 /post_form2 (POST form)</a></li>
+     <li><a href="#/post_form3">11.2.5 /post_form3 (POST multipart form)</a></li>
+     <li><a href="#/get_path_param">11.2.6 /get_path_param</a></li>
+     <li><a href="#/redirect">11.2.7 /redirect</a></li>
+     <li><a href="#/message">11.2.8 /message</a></li>
+     <li><a href="#/cookie">11.2.9 /cookie</a></li>
+     <li><a href="#/get_medaka_record">11.2.10 /get_medaka_record</a></li>
+     <li><a href="#/get_medaka_record2">11.2.11 /get_medaka_record2</a></li>
+     <li><a href="#/post_request_json">11.2.12 /post_request_json</a></li>
+     <li><a href="#/post_request_formdata">11.2.13 /post_request_formdata</a></li>
+     <li><a href="#/post_request_arraybuffer">11.2.14 /post_request_arraybuffer</a></li>
+     <li><a href="#/post_request_blob">11.2.15 /post_request_blob</a></li>
+     <li><a href="#/session">11.2.16 /session</a></li>
+     <li><a href="#/cookie_proc">11.2.17/cookie_proc</a></li>
+     <li><a href="#/session_proc">11.2.18 /session_proc</a></li>
+     <li><a href="#/medaka_db">11.2.19 /medaka_db</a></li>
+     <li class="fs-4"><a href="about_cookie.html">12 付録：クッキーについて</a></li>
+     <li class="fs-4"><a href="about_request.html">13 付録：リクエストについて</a></li>
     </ul>
   </div>
  </div>
@@ -104,6 +115,7 @@
 </header>
 
 <section class="row">
+<div class="fixed-top"><a href="#top">TOP</a></div>
 <!-- 1 概要 -->
 <h2 class="mt-3"><a id="1 概要">1 概要</a></h2>
 <p>"Medaka HTTP Server" は Nim 言語で書かれた HTTP サーバである。</p>
@@ -803,11 +815,1418 @@ BB</pre>
 <section class="row">
 <!-- 11 サンプルの解説 -->
 <h2 class="mt-3"><a id="11 サンプルの解説">11 サンプルの解説</a></h2>
-</section>
+<!--  11.1 medaka.nim -->
+<h3 class="mt-2"><a id="11.1 medaka.nim">11.1 medaka.nim</a></h3>
+<p>medaka.nim の proc callback() はクライアントからのリクエストがあるとコールされる。ここではリクエスト内容を解析して、適切なハンドラをコールしなければならない。
+リクエストの内容のうち、req.url.path と req.reqMethod が重要である。</p>
+<p>req.url.path は URL のうちポート番号から後ろの部分であり、req.reqMethod はメソッド名である。</p>
+<p>例えば、http://localhost:2024/hello という URL の場合、req.url.path は "/hello" になり、req.reqMethod はフォームからのポストでなければ、"GET" となる。</p>
+<p>callback() の例を下に示す。/hello より前は静的ファイルと CGI のハンドラであり、変更してはならない。 </p>
+<pre class="border rounded p-1"><code>#   TODO: You must change below, when you create your own application.
+proc callback(req: Request) {.async.} =
+  info(req.url.path)
+  echo req.url.path
+  var status = Http200
+  var content = ""
+  var headers = newHttpHeaders({"Content-Type":"text/html; charset=utf-8"})
+  let settings = readSettings()
+  var filepath = ""
+  let htdocs = settings["html"]
+  let templates = settings["templates"]
+  if req.url.path == "" or req.url.path == "/":
+    filepath = htdocs & "/index.html"
+  else:
+    filepath = htdocs & "/" & req.url.path
+  # dispatch handler by method and path
+  #   static files
+  if req.reqMethod == HttpGet and fileExists(Path(filepath)):
+    (status, content, headers) = staticFile(filepath)
+  # CGI
+  elif req.reqMethod == HttpGet and req.url.path.startsWith("/cgi-bin/"):
+    if medaka_procs.is_windows():
+      content = "&lt;h1>CGI is not supported on Windows.&lt;/h1>"
+      status = Http400
+    else:
+      try:
+        filepath = settings["cgi-bin"] & "/" & req.url.path.substr(len("/cgi-bin/"))
+        (status, content) = handlers.execCgi(filepath, req.url.query)
+        headers = newHttpHeaders()
+        var lines = content.split("\n")
+        var i = 0
+        while len(lines[i]) > 0:
+          var pair = lines[i].split(": ")
+          headers[pair[0]] = pair[1]
+          i += 1
+        content = ""
+        i += 1
+        while i < len(lines):
+          content &= lines[i] & "\n"
+          i += 1
+      except Exception as e:
+        content = e.msg
+    await req.respond(status, content, headers)
+    return
+  #  /hello
+  elif req.url.path == "/hello":
+    (status, content, headers) = handlers.get_hello()
+  #  /get_query1
+  elif req.url.path == "/get_query1":
+    (status, content, headers) = handlers.get_query1(req.url.query)
+  #  /get_form1
+  elif req.url.path == "/get_form1":
+    filepath = templates & "/form1.html"
+    (status, content, headers) = handlers.get_form1(filepath, req.url.query)
+  #  /post_form2
+  elif req.url.path == "/post_form2":
+    filepath = templates & "/form2.html"
+    (status, content, headers) = handlers.post_form2(filepath, req.headers, req.body)
+  #  /post_form3
+  elif req.url.path == "/post_form3":
+    filepath = templates & "/form3.html"
+    (status, content, headers) = handlers.post_form3(filepath, req.headers, "file1", req.body, settings["upload"])
+  #  /get_path_param
+  elif req.url.path == "/get_path_param" or req.url.path == "/get_path_param/":
+    filepath = templates & "/get_path_param.html"
+    (status, content, headers) = handlers.get_path_param(filepath, "", req.headers)
+  #  /get_path_param regex
+  elif match(req.url.path, re(r"\/get_path_param\/\d+")):
+    filepath = templates & "/get_path_param.html"
+    (status, content, headers) = handlers.get_path_param(filepath, req.url.path, req.headers)
+  #  GET /post_request_json
+  elif req.reqMethod == HttpGet and req.url.path == "/post_request_json":
+    let filepath = htdocs & "/post_request_json.html"
+    (status, content, headers) = staticFile(filepath)
+  #  POST /post_request_json
+  elif req.reqMethod == HttpPost and req.url.path == "/post_request_json":
+    (status, content, headers) = handlers.post_request_json(req.body, req.headers)
+  #  GET /post_request_formdata
+  elif req.reqMethod == HttpGet and req.url.path == "/post_request_formdata":
+    filepath = htdocs & "/post_request_formdata.html"
+    (status, content, headers) = staticFile(filepath)
+  #  POST /post_request_formdata
+  elif req.reqMethod == HttpGet and req.url.path == "/post_request_formdata":
+    (status, content, headers) = handlers.post_request_formdata(req.body, req.headers)
+  #  GET /post_request_arraybuffer
+  elif req.url.path == "/post_request_arraybuffer":
+    filepath = htdocs & "/post_request_arraybuffer.html"
+    (status, content, headers) = staticFile(filepath)
+  # POST /post_request_arraybuffer
+  elif req.reqMethod == HttpPost and req.url.path == "/post_request_arraybuffer":
+    (status, content, headers) = handlers.post_request_arraybuffer(req.body, req.headers)
+  # POST /post_request_blob
+  elif req.reqMethod == HttpPost and req.url.path == "/post_request_blob":
+    (status, content, headers) = handlers.post_request_blob(req.body)
+  #  /redirect
+  elif req.url.path == "/redirect":
+    filepath = templates & "/redirect.html"
+    (status, content, headers) = handlers.get_redirect(req.url.query)
+  #  /message
+  elif req.url.path == "/message":
+    (status, content, headers) = handlers.get_message(req.url.query)
+  #  /cookie
+  elif req.url.path == "/cookie":
+    (status, content, headers) = handlers.get_cookie(req.headers)
+  #  /remove_cookies
+  elif req.url.path == "/remove_cookie":
+    let filepath = htdocs & "/remove_cookie.html"
+    (status, content, headers) = staticFile(filepath)
+  #  /session
+  elif req.reqMethod == HttpGet and req.url.path == "/session":
+    echo req.headers
+    filepath = templates & "/session.html"
+    (status, content, headers) = handlers.post_session(filepath, req.url.query, req.headers)
+  elif req.reqMethod == HttpPost and req.url.path == "/session":
+    filepath = templates & "/session.html"
+    (status, content, headers) = handlers.post_session(filepath, req.body, req.headers)
+  #  /get_medaka_record
+  elif req.url.path == "/get_medaka_record":
+    if req.url.query == "":
+      (status, content, headers) = staticFile("./html/get_medaka_record.html")
+    else:
+      (status, content, headers) = handlers.get_medaka_record(req.url.query)
+  #  /get_medaka_record2
+  elif req.url.path == "/get_medaka_record2":
+    if req.url.query == "":
+      filepath = htdocs & "/get_medaka_record2.html"
+      (status, content, headers) = staticFile(filepath)
+    else:
+      (status, content, headers) = handlers.get_medaka_record2(req.url.query)
+  # /jump (redirect)
+  elif req.url.path == "/jump":
+    let kv = medaka_procs.parseQuery(req.url.query)
+    (status, content, headers) =  medaka_procs.redirect(kv["url"])
+  # /cookie_proc
+  elif req.url.path == "/cookie_proc":
+    headers = textHeader()
+    (content, headers) = handlers.cookie_proc(req.url.query)
+  # /session_proc
+  elif req.url.path == "/session_proc":
+    headers = jsonHeader()
+    (content, headers) = handlers.session_proc(req.url.query, req.headers)
+  # /sendfile
+  elif req.url.path == "/sendfile":
+    var kv = parseQuery(req.url.query)
+    let filepath = kv["path"]
+    (status, content, headers) = medaka_procs.sendfile(filepath)
+  # /medaka_db
+  elif req.url.path == "/medaka_db":
+    content = handlers.medaka_db(settings["templates"])
+  else:
+    status = Http403 # Forbidden
+    headers = newHttpHeaders({"Content-Type":"text/html"})
+    content = "<h1>Error: This path is fobidden.</h1><p>" & req.url.path & "</p>"
+  await req.respond(status, content, headers)
+</code></pre>
+<br>
 
-<footer class="row mt-5 mb-5">
-  <p class="text-center"><a href="#top">TOP</a></p>
-</footer>
-</article>
-</body>
-</html>
+<!--  11.2 handlers.nim -->
+<h3 class="mt-2"><a id="11.2 handlers.nim">11.2 handlers.nim</a></h3>
+<p>以下に callback() からコールされるハンドラの例を示す。</p>
+
+<!--  11.2.1 /hello -->
+<h4 class="fs-5 mt-2"><a id="/hello">11.2.1 /hello ハンドラ</a></h4>
+<p>この例は、単純に "Hello World!" という文字を text/plain としてクライアントへ送る。</p>
+<pre class="border rounded p-1"><code># hello
+proc get_hello*(): HandlerResult =
+  result = (Http200, "Hello World!", textHeader())
+</code></pre>
+
+<!--  11.2.2 /get_query1 -->
+<h4 class="fs-5 mt-2"><a id="/get_query1">11.2.2 /get_query1</a></h4>
+<p>この例はテンプレートファイルを使わず、ハンドラ内に HTML を埋め込んで応答として返す。その際、クエリー文字列を HTML に埋め込んでいる。</p>
+<pre class="border rounded p-1"><code># get_query1
+proc get_query1*(query: string): HandlerResult =
+  var html = """&lt;!doctype html>
+&lt;html>
+ &lt;head>
+  &lt;meta charset="utf-8">
+  &lt;title>query1&lt;/title>
+ &lt;/head>
+ &lt;body>
+  &lt;h1 style="text-align:center">query1&lt;/h1>
+  &lt;br />
+  &lt;h2 style="text-align:center">{{query}}&lt;/h2>
+  &lt;p style="text-align:center">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/body>
+&lt;/html>
+"""
+  var content = html.replace("{{query}}", query)
+  result = (Http200, content, htmlHeader())</code></pre>
+
+<!--  11.2.3 /get_form1 -->
+<h4 class="fs-5 mt-2"><a id="/get_form1">11.2.3 /get_form1</a></h4>
+<p>この例はフォームを GET メソッドでサーバに送り、送られてきたクエリー文字列を送り返し表示する。</p>
+<pre class="border rounded p-1"><code># get_form1
+proc get_form1*(filepath: string, query: string): HandlerResult=
+  var args = newStringTable({"result":query})
+  if query == "":
+    args["id"] = ""
+    args["title"] = ""
+    args["info"] = ""
+  else:
+    var hash = parseQuery(query)
+    args["id"] = getQueryValue(hash, "id", "")
+    args["title"] = getQueryValue(hash, "title", "")
+    args["info"] = getQueryValue(hash, "info", "")
+  var (status, buff) = templateFile(filepath, args)
+  return (status, buff, htmlHeader())</code></pre>
+
+<p>テンプレートファイル ./templates/form1.html</p>
+<p><a href="https://github.com/makandat/JS365Lib" target="_blank">JS365Lib.js</a></p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>medaka get_form1&lt;/title>
+ &lt;!-- BootstrapのCSS読み込み -->
+ &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+ &lt;style>
+.bgcolor {
+    background-color: whitesmoke;
+    border-radius:6px;
+  }
+ &lt;/style>
+ &lt;script src="./js/JS365Lib.js">&lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="container">
+  &lt;h1 class="header-1 bgcolor text-center p-5">medaka get_form1&lt;/h1>
+  &lt;p class="text-center fs-5">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="container">
+   &lt;section class="row">
+    &lt;form name="form1" method="GET" action="/get_form1">
+      &lt;div class="mb-3 mt-5 row">
+       &lt;div class="col-2">
+         &lt;label for="id" class="form-label">Record id&lt;/label>
+         &lt;input type="number" id="id" name="id" class="form-control" value="{{id}}" />
+       &lt;/div>
+      &lt;/div>
+      &lt;div class="mb-3 row">
+       &lt;div class="col-5">
+        &lt;label for="title" class="form-label">Title&lt;/label>
+        &lt;input type="text" id="title" name="title" class="form-control" value="{{title}}" />
+       &lt;/div>
+      &lt;/div>
+      &lt;div class="mb-3">
+        &lt;label for="info" class="form-label">Info&lt;/label>
+        &lt;input type="text" id="info" name="info" class="form-control" value="{{info}}"/>
+      &lt;/div>
+      &lt;div class="mb-3">
+        &lt;input type="submit" class="btn btn-primary" value="送信" />
+      &lt;/div>
+      &lt;div class="mb-3 form-text">{{result}}&lt;/div>
+    &lt;/form>
+   &lt;/section>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer class="container">
+  &lt;p class="text-center mt-4">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+ &lt;!-- BootstrapのJS読み込み -->
+ &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js">&lt;/script>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.4 /post_form2 -->
+<h4 class="fs-5 mt-2"><a id="/post_form2">11.2.4 /post_form2</a></h4>
+<p>この例はフォームデータをポストして、送られてきたリクエスト内容を送り返して表示する。</p>
+<pre class="border rounded p-1"><code># post_form2
+proc post_form2*(filepath: string, headers:HttpHeaders, body: string): HandlerResult =
+  var s = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  var args = newStringTable({"headers":s, "body":body})
+  if body == "":
+    args["id"] = ""
+    args["name"] = ""
+    args["age"] = ""
+    args["male"] = "checked"
+    args["female"] = ""
+  else:
+    var hash = parseQuery(body)
+    args["id"] = getQueryValue(hash, "id", "")
+    args["name"] = getQueryValue(hash, "name", "")
+    args["age"] = getQueryValue(hash, "age", "")
+    if getQueryValue(hash, "male", "") == "male":
+      args["male"] = "checked"
+      args["female"] = ""
+    else:
+      args["male"] = ""
+      args["female"] = "checked"
+  var (status, buff) = templateFile(filepath, args)
+  return (status, buff, htmlHeader())
+</code></pre>
+
+<p>テンプレートファイル ./templates/form2.html</p>
+<p><a href="https://github.com/makandat/JS365Lib" target="_blank">JS365Lib.js</a></p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>medaka form2&lt;/title>
+ &lt;!-- BootstrapのCSS読み込み -->
+ &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+ &lt;style>
+.bgcolor {
+    background-color: whitesmoke;
+    border-radius:6px;
+  }
+ &lt;/style>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="container">
+  &lt;h1 class="header-1 bgcolor text-center p-5">medaka post_form2&lt;/h1>
+  &lt;p class="text-center fs-4">&lt;a href="/index.html">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="container">
+   &lt;form method="POST" action="/post_form2">
+    &lt;div class="row mb-3">
+     &lt;div class="col-1">
+      &lt;label for="id" class="form-label">id&lt;/label>
+      &lt;input type="number" class="form-control" name="id" id="id" value="{{id}}">
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+     &lt;div class="col-3">
+      &lt;label for="name" class="form-label">name&lt;/label>
+      &lt;input type="text" class="form-control" name="name" id="name" value="{{name}}">
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+     &lt;div class="col-1">
+      &lt;label for="age" class="form-label">age&lt;/label>
+      &lt;input type="number" class="form-control" name="age" id="age" value="{{age}}">
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+     &lt;div class="col-5">
+      &lt;input type="radio" class="form-check-input" name="sex" id="male" value="male" {{male}}>
+      &lt;label for="male" class="form-check-label">male&lt;/label>
+      &lt;input type="radio" class="form-check-input" name="sex" id="female" value="female" {{female}}>
+      &lt;label for="female" class="form-check-label">female&lt;/label>
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+      &lt;div class="col-1">
+       &lt;input type="submit" class="btn btn-primary" value="送信">
+      &lt;/div>
+    &lt;/div>
+    &lt;h3>headers&lt;/h3>
+    &lt;pre class="row mb-3">{{headers}}&lt;/pre>
+    &lt;h3>body&lt;/h3>
+    &lt;div class="row mb-3">{{body}}&lt;/div>
+   &lt;/form>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer class="container">
+  &lt;p class="text-center mt-4">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+ &lt;!-- BootstrapのJS読み込み -->
+ &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js">&lt;/script>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<!--  11.2.5 /post_form3 -->
+<h4 class="fs-5 mt-2"><a id="/post_form3">11.2.5 /post_form3</a></h4>
+<p>この例はマルチパートフォームを使って、ファイルをアップロードしている。</p>
+<pre class="border rounded p-1"><code># post_form3
+proc post_form3*(filepath: string, headers:HttpHeaders, name: string, body: string, upload_folder:string=""): HandlerResult =
+  var s = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  var args = newStringTable({"headers":s, "body":body})
+  if body != "":
+    var disps = parseMultipartBody(body, headers)
+    let savefile = upload_folder & "/" & disps.getFileName(name)
+    let chunk = disps.getChunk(name)
+    writeFile(savefile, chunk)
+  var (status, buff) = templateFile(filepath, args)
+  return (status, buff, htmlHeader())</code></pre>
+<p>テンプレートファイル ./templates/form3.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>medaka form3&lt;/title>
+ &lt;!-- BootstrapのCSS読み込み -->
+ &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+ &lt;style>
+  .bgcolor {
+    background-color: whitesmoke;
+    border-radius:6px;
+  }
+  .lines {
+    padding: 8px;
+    border: solid thin silver;
+    border-radius: 6px;
+  }
+ &lt;/style>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="container">
+  &lt;h1 class="header-1 bgcolor text-center p-5">medaka post_form3&lt;/h1>
+  &lt;p class="text-center fs-4">&lt;a href="/index.html">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="container">
+   &lt;form method="POST" enctype="multipart/form-data" action="/post_form3">
+    &lt;div class="row mb-3">
+     &lt;div class="col-5">
+      &lt;label for="file1" class="form-label">file1&lt;/label>
+      &lt;input type="file" class="form-control" name="file1" id="file1">
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+     &lt;div class="col-4">
+      &lt;label for="title" class="form-label">title&lt;/label>
+      &lt;input type="text" class="form-control" name="title" id="title">
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+     &lt;div class="col-6">
+      &lt;label for="info" class="form-label">info&lt;/label>
+      &lt;input type="text" class="form-control" name="info" id="info">
+     &lt;/div>
+    &lt;/div>
+    &lt;div class="row mb-3">
+      &lt;div class="col-1">
+       &lt;input type="submit" class="btn btn-primary" value="送信">
+      &lt;/div>
+    &lt;/div>
+    &lt;h3>headers&lt;/h3>
+    &lt;pre class="row mt-4 mb-3 lines">{{headers}}&lt;/pre>
+    &lt;h3>body&lt;/h3>
+    &lt;pre class="row mt-4 mb-3 lines">{{body}}&lt;/pre>
+   &lt;/form>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer class="container">
+  &lt;p class="text-center mt-4">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+ &lt;!-- BootstrapのJS読み込み -->
+ &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js">&lt;/script>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.6 /get_path_param -->
+<h4 class="fs-5 mt-2"><a id="/get_path_param">11.2.6 /get_path_param</a></h4>
+<p>この例ではパスに一部を可変にしてパラメータとして使用するものである。具体的には /get_path_param/number としたパスで number を整数としている。
+この整数は SQLite3 データベース medaka.db に含まれる medaka というテーブルの主キーとしてクエリーに使っている。</p>
+<pre class="border rounded p-1"><code># get_path_param
+proc get_path_param*(filepath:string, path:string, headers:HttpHeaders): HandlerResult =
+  var s = ""
+  var res = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  let parts = path.split("/")
+  var id = 0
+  if len(parts) > 2:
+    id = parseInt(parts[2])
+  let db = db_sqlite.open("./medaka.db", "", "", "")
+  let sql: SQLQuery = SQLQuery("SELECT * FROM medaka WHERE id = ?")
+  var row:Row = db.getRow(sql, id)
+  if row[0] == "":
+    res = "Empty"
+  else:
+    for v in row:
+      res &= fmt"{v}, "
+      res = res.substr(0, len(res)-2)
+  var args = newStringTable({"headers":s, "path":path, "result":res})
+  var (status, buff) = templateFile(filepath, args)
+  return (status, buff, htmlHeader())
+</code></pre>
+<p>テンプレートファイル ./templates/get_path_param.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>get_path_param&lt;/title>
+ &lt;link rel="stylesheet" href="/css/style.css" />
+ &lt;script src="/js/JS365Lib.js">&lt;/script>
+ &lt;script>
+  function query() {
+    const id = getValue("id");
+    if (id == "")
+      alert("Error: id is empty.");
+    else
+      location.href = "/get_path_param/" + id;
+  }
+ &lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header>
+  &lt;h1 class="frame">get_path_param&lt;/h1>
+  &lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="section">
+  &lt;form id="form1" class="form">
+    &lt;div class="form-row">
+      &lt;label>id &lt;input type="number" id="id" class="form-control">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;button type="button" class="btn" onclick="javascript:query()">送信&lt;/button>
+    &lt;/div>
+  &lt;/form>
+  &lt;h3>Headers&lt;/h3>
+  &lt;pre id="headers" class="src">{{headers}}&lt;/pre>
+  &lt;h3>Path&lt;/h3>
+  &lt;p id="path" class="src">{{path}}&lt;/p>
+  &lt;h3>Result&lt;/h3>
+  &lt;p id="result" class="message">{{result}}&lt;/p>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p style="text-align:center;">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.7 /redirect -->
+<h4 class="fs-5 mt-2"><a id="/redirect">11.2.7 /redirect</a></h4>
+<p>この例はリダイレクトを行うものである。</p>
+<pre class="border rounded p-1"><code>proc get_redirect*(query: string): HandlerResult =
+  var args = parseQuery(query)
+  var (status, buff) = templateFile("./templates/redirect.html", args)
+  return (status, buff, htmlHeader())</code></pre>
+<p>テンプレートファイル ./templates/</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html>
+ &lt;head>
+  &lt;meta charset="utf-8">
+  &lt;title>Redirecting ..&lt;/title>
+  &lt;link rel="stylesheet" href"/css/style.css">
+  &lt;script>
+   function onload() {
+     location.href = "{{location}}";
+   }
+  &lt;/script>
+ &lt;/head>
+
+ &lt;body onload="onload()">
+  &lt;h1>Redirecting ..&lt;/h1>
+ &lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.8 /message -->
+<h4 class="fs-5 mt-2"><a id="/message">11.2.8 /message</a></h4>
+<p>この例はメッセージを表示するページを開く例である。</p>
+<pre class="border rounded p-1"><code># show message page
+proc get_message*(query: string): HandlerResult =
+  var args = parseQuery(query)
+  var (status, buff) = templateFile("./templates/message.html", args)
+  return (status, buff, htmlHeader())</code></pre>
+<p>テンプレートファイル ./templates/message.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html>
+ &lt;head>
+  &lt;meta charset="utf-8">
+  &lt;title>{{title}}&lt;/title>
+  &lt;link href="/css/style.css" rel="stylesheet">
+ &lt;/head>
+ &lt;body>
+  &lt;div class="section">
+   &lt;h1>{{title}}&lt;/h1>
+   &lt;p style="text-align:center">&lt;a href="/">HOME&lt;/a>&lt;/p>
+   &lt;br>
+   &lt;p class="message">{{message}}&lt;/p>
+  &lt;/div>
+ &lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.9 /cookie -->
+<h4 class="fs-5 mt-2"><a id="/cookie">11.2.9 /cookie</a></h4>
+<p>この例は、リクエストヘッダにクッキーが含まれていれば、それらの一覧を表示する。
+また、レスポンスヘッダにクッキー "a=ABC001", "b=bBBbbB" を追加する。</p>
+<pre class="border rounded p-1"><code># cookie
+proc get_cookie*(headers: HttpHeaders): HandlerResult =
+  var args = newStringTable()
+  var cookies: StringTableRef = getCookies(headers)
+  var ret_headers = htmlHeader()
+  if len(cookies) == 0:
+    args["result"] = "クッキーがありません。(初回の場合、リロードしてください。)"
+    args["list"] = ""
+    ret_headers["Set-Cookie"] = @["a=ABC001", "b=bBBbbB"]
+  else:
+    args["result"] = "クッキーがあります。"
+    args["list"] = ""
+    for k, v in cookies:
+      args["list"] &= li(fmt"{k}={v}")
+  var (status, buff) = templateFile("./templates/cookie.html", args)
+  return (status, buff, ret_headers)</code></pre>
+<p>テンプレートファイル ./templates/cookie.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html>
+ &lt;head>
+  &lt;meta charset="utf-8">
+  &lt;title>cookie&lt;/title>
+  &lt;link href="/css/style.css" rel="stylesheet">
+ &lt;/head>
+ &lt;body>
+  &lt;div class="section">
+   &lt;h1>cookie&lt;/h1>
+   &lt;p style="text-align:center">&lt;a href="/index.html">HOME&lt;/a>&lt;/p>
+   &lt;br>
+   &lt;ul>
+     {{list}}
+   &lt;/ul>
+   &lt;br>
+   &lt;p>{{result}}&lt;/p>
+  &lt;/div>
+ &lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.10 /get_medaka_record -->
+<h4 class="fs-5 mt-2"><a id="/get_medaka_record">11.2.10 /get_medaka_record</a></h4>
+<p>この例は SQLite3 データベースの medaka テーブルのレコードを主キーを指定して取得するウェブサービスの使用例である。</p>
+<pre class="border rounded p-1"><code># get_medaka_record
+proc get_medaka_record*(query: string): HandlerResult =
+  var data = parseQuery(query)
+  var id = parseInt(getQueryValue(data, "id", "0"))
+  let db = db_sqlite.open("./medaka.db", "", "", "")
+  var buff: string = ""
+  let sql: SQLQuery = SQLQuery("SELECT * FROM medaka WHERE id = ?")
+  var row:Row = db.getRow(sql, id)
+  if row[0] == "":
+    buff = "Empty"
+  else:
+    for v in row:
+      buff &= fmt"{v}, "
+      buff = buff.substr(0, len(buff)-2)
+  return (Http200, buff, textHeader())</code></pre>
+<p>ページファイル ./html/get_medaka_record.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html>
+ &lt;head>
+  &lt;meta charset="utf-8">
+  &lt;title>Web service (1) /get_medaka_record as text&lt;/title>
+  &lt;link rel="stylesheet" href="/css/style.css">
+  &lt;script src="/js/JS365Lib.js">&lt;/script>
+  &lt;script>
+    function query() {
+      getText("/get_medaka_record?id=" + getValue("id"), (text) => {
+        setValue("message", text);
+      });
+    }
+  &lt;/script>
+ &lt;/head>
+
+ &lt;body>
+  &lt;section class="section">
+   &lt;h1 class="frame">Web service (1) /get_medaka_record as text&lt;/h1>
+   &lt;p style="text-align:center;margin-bottom:10px;">&lt;a href="/">HOME&lt;/a>&lt;/a>&lt;/p>
+   &lt;p>Get the record as text of medaka table in SQLite3 medaka.db&lt;/p>
+   &lt;form method="GET" class="form">
+     &lt;div class="form-row">&lt;label>id &lt;/label>&lt;input type="number" class="form-control" id="id" name="id" size="10" value="1">&lt;/div>
+     &lt;div class="form-row">&lt;button type="button" class="btn" onclick="javascript:query()">Query&lt;/button>&lt;/div>
+   &lt;/form>
+   &lt;div id="message" class="message">&lt;/div>
+  &lt;/section>
+ &lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.11 /get_medaka_record2 -->
+<h4 class="fs-5 mt-2"><a id="/get_medaka_record2">11.2.11 /get_medaka_record2</a></h4>
+<p>この例は 11.2.10 と同じく SQLite3 データベースの medaka テーブルのレコードを主キーを指定して取得するウェブサービスの使用例である。</p>
+<p>11.2.10 では、レスポンスのタイプは text/plain であるが、この例は JSON (application/json) としてレスポンスを返す。</p>
+<pre class="border rounded p-1"><code># get_medaka_record2
+proc get_medaka_record2*(query: string): HandlerResult =
+  var data = parseQuery(query)
+  var id = parseInt(getQueryValue(data, "id", "0"))
+  let db = db_sqlite.open("./medaka.db", "", "", "")
+  var j: JsonNode
+  let sql: SQLQuery = SQLQuery("SELECT * FROM medaka WHERE id = ?")
+  var row:Row = db.getRow(sql, id)
+  if row[0] == "":
+    j = %* {"id":"", "path":"", "method":"", "query":"", "info":""}
+  else:
+    j = %* {"id":row[0], "path":row[1], "method":row[2], "query":row[3], "info":row[4]}
+  return (Http200, $j, jsonHeader())</code></pre>
+<p>ページファイル ./html/get_medaka_record2.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html>
+ &lt;head>
+  &lt;meta charset="utf-8">
+  &lt;title>Web service (2) /get_medaka_record as JSON&lt;/title>
+  &lt;link rel="stylesheet" href="/css/style.css">
+  &lt;script src="/js/JS365Lib.js">&lt;/script>
+  &lt;script>
+    function query() {
+      getJSON("/get_medaka_record2?id=" + getValue("id"), (data) => {
+         let buff = "&lt;ul>";
+         buff += `&lt;li>${data.id}&lt;/li>`;
+        buff += `&lt;li>${data.path}&lt;/li>`;
+        buff += `&lt;li>${data.method}&lt;/li>`;
+        buff += `&lt;li>${data.query}&lt;/li>`;
+        buff += `&lt;li>${data.info}&lt;/li>`;
+        buff += "&lt;/ul>";
+        setValue("message", buff, false);
+      });
+    }
+  &lt;/script>
+ &lt;/head>
+
+ &lt;body>
+  &lt;section class="section">
+   &lt;h1 class="frame">Web service (2) /get_medaka_record as JSON&lt;/h1>
+   &lt;p style="text-align:center;;margin-bottom:10px;">&lt;a href="/">HOME&lt;/a>&lt;/a>&lt;/p>
+   &lt;p>Get the record as JSON of medaka table in SQLite3 medaka.db&lt;/p>
+   &lt;form method="GET" class="form">
+     &lt;div class="form-row">&lt;label>id &lt;/label>&lt;input type="number" class="form-control" id="id" name="id" size="10" value="1">&lt;/div>
+     &lt;div class="form-row">&lt;button type="button" class="btn" onclick="javascript:query()">Query&lt;/button>&lt;/div>
+   &lt;/form>
+   &lt;div id="message">&lt;/div>
+  &lt;/section>
+ &lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.12 /post_request_json -->
+<h4 class="fs-5 mt-2"><a id="/post_request_json">11.2.12 /post_request_json</a></h4>
+<p>この例は、リクエストデータを JSON (application/json) でポストし、
+SQLite3 データベースの medaka テーブルの主キー id で指定したレコードを取得する。
+そして、レスポンスとしてそのレコードを JSON (application/json) で返すものである。</p>
+<pre class="border rounded p-1"><code># post_request_json
+proc post_request_json*(body: string, headers: HttpHeaders): HandlerResult =
+  var content = newStringTable()
+  var status = Http200
+  var res = ""
+  var s = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  content["headers"] = s
+  content["body"] = body
+  content["result"] = ""
+  var j = parseJson(body)
+  var id = j["id"]
+  let db = db_sqlite.open("./medaka.db", "", "", "")
+  let sql: SQLQuery = SQLQuery("SELECT * FROM medaka WHERE id = ?")
+  var row:Row = db.getRow(sql, id)
+  if row[0] == "":
+    res = "Empty"
+  else:
+    for v in row:
+      res &= fmt"{v}, "
+      res = res.substr(0, len(res)-2)
+    content["result"] = res
+  var data = %* {"headers":content["headers"], "body":content["body"], "result":content["result"]}
+  return (status, $data, jsonHeader())</code></pre>
+<p>ページファイル ./html/post_request_json.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>get_request_json&lt;/title>
+ &lt;link rel="stylesheet" href="/css/style.css" />
+ &lt;script src="/js/JS365Lib.js">&lt;/script>
+ &lt;script>
+  function query() {
+    const id = getValue("id");
+    if (id == "")
+      alert("id is empty.");
+    else
+      postJSON("/post_request_json", {"id":parseInt(id), "hidden":0}, (data) => {
+          setValue("headers", data["headers"]);
+          setValue("body", data["body"]);
+          setValue("result", data["result"]);
+      });
+  }
+ &lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header>
+  &lt;h1 class="frame">get_request_json&lt;/h1>
+   &lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="section">
+  &lt;form id="form1" class="form">
+    &lt;div class="form-row">
+      &lt;label>id &lt;input type="number" id="id" class="form-control">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;button type="button" class="btn" onclick="javascript:query()">送信&lt;/button>
+    &lt;/div>
+  &lt;/form>
+  &lt;h3>Headers&lt;/h3>
+  &lt;pre id="headers" class="src">&lt;/pre>
+  &lt;h3>Body&lt;/h3>
+  &lt;p id="body" class="src">&lt;/p>
+  &lt;h3>Result&lt;/h3>
+  &lt;p id="result" class="message">&lt;/p>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p style="text-align:center;">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.13 /post_request_formdata -->
+<h4 class="fs-5 mt-2"><a id="/post_request_formdata">11.2.13 post_request_formdata</a></h4>
+<p>この例は、SQLite3 データベースの medaka テーブルにレコードを挿入あるいは更新するウェブサービスである。
+リクエストデータは FormData オブジェクト (multipart/form-data) として作成する。</p>
+<pre class="border rounded p-1"><code># post_request_formdata
+proc post_request_formdata*(body: string, headers: HttpHeaders): HandlerResult =
+  var status = Http200
+  var res = ""
+  var s = ""
+  for k, v in headers:
+    s &= k
+    s &= ": "
+    for w in v:
+      s &= w
+    s &= "\n"
+  var disps = parseMultipartBody(body, headers)
+  var rslt: JsonNode
+  var id = disps.getValue("id")
+  let path = disps.getValue("path")
+  let methods = disps.getValue("methods")
+  let query = disps.getValue("query")
+  let info = disps.getValue("info")
+  var sql: string
+  let db = db_sqlite.open("./medaka.db", "", "", "")
+  if id == "0":
+    # Insert
+    sql = "INSERT INTO medaka VALUES(NULL, ?, ?, ?, ?)"
+    db.exec(SqlQuery(sql), path, methods, query, info)
+    rslt = %* {"result":"Inserted", "headers":s, "body":body}
+  else:
+    # Update
+    sql = "UPDATE medaka SET path=?, methods=?, query=?, info=? WHERE id=?"
+    db.exec(SqlQuery(sql), path, methods, query, info, parseInt(id))
+    rslt = %* {"result":"Updated", "headers":s, "body":body}
+  db.close()
+  return (Http200, $rslt, jsonHeader())</code></pre>
+<p>ページファイル ./html/post_request_formdata.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>post_request_formdata&lt;/title>
+ &lt;link rel="stylesheet" href="/css/style.css" />
+ &lt;script src="/js/JS365Lib.js">&lt;/script>
+ &lt;script>
+  function query1() {
+    const formData = new FormData(form1);
+    postFormData("/post_request_formdata", formData, (data) => {
+      setValue("headers", data["headers"]);
+      setValue("body", data["body"]);
+      setValue("result", data["result"]);
+    });
+  }
+ &lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="frame section">
+  &lt;h1>post_request_formdata&lt;/h1>
+   &lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="section">
+  &lt;br>
+  &lt;form id="form1" name="form1" class="form">
+    &lt;div class="form-row">
+      &lt;label>id&lt;br>&lt;input type="text" id="id" name="id" value="0" class="form-control"> (If 0 then insert else update)&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;label>path&lt;br>&lt;input type="text" id="path" name="path" size="50" class="form-control">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;label>methods&lt;br>&lt;input type="text" id="methods" name="methods" class="form-control">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;label>query&lt;br>&lt;input type="text" id="query" name="query" size="50" class="form-control">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;label>info&lt;br>&lt;input type="text" id="info" name="info" size="80" class="form-control">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;button type="button" class="btn" onclick="javascript:query1()">&nbsp;&nbsp;送信&nbsp;&nbsp;&lt;/button>
+    &lt;/div>
+  &lt;/form>
+  &lt;h3>Headers&lt;/h3>
+  &lt;pre id="headers" class="src">&lt;/pre>
+  &lt;h3>Body&lt;/h3>
+  &lt;p id="body" class="src">&lt;/p>
+  &lt;h3>Result&lt;/h3>
+  &lt;p id="result" class="message">&lt;/p>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p style="text-align:center;">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.14 /post_request_arraybuffer -->
+<h4 class="fs-5 mt-2"><a id="/post_request_arraybuffer">11.2.14 /post_request_arraybuffer</a></h4>
+<pre class="border rounded p-1"><code># post_request_arraybuffer
+proc post_request_arraybuffer*(body: string, headers: HttpHeaders): HandlerResult =
+  if headers["content-type"] == "application/octed-stream":
+    return (Http200, body, octedHeader())
+  raise</code></pre>
+<p>ページファイル ./html/post_request_arraybuffer.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>post_request_arraybuffer&lt;/title>
+ &lt;link rel="stylesheet" href="/css/style.css" />
+ &lt;script src="/js/JS365Lib.js">&lt;/script>
+ &lt;script>
+  function sendData() {
+    let bdata = getValue("data");
+    const url = "/post_request_arraybuffer";
+    const request = new Request(url, {
+      method:"POST",
+      body:bdata,
+    });
+    request.arrayBuffer()
+    .then(data => {
+      setValue("length", data.byteLength);
+      const view = new Uint8Array(data);
+      setValue("body", view.toString());
+    });
+  }
+ &lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="frame section">
+  &lt;h1>post_request_arraybuffer&lt;/h1>
+   &lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="section">
+  &lt;br>
+  &lt;form id="form1" name="form1" class="form">
+    &lt;div class="form-row">
+      &lt;label>data&lt;br>&lt;input type="text" id="data" size="100" value="ABC 012" class="form-control">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;button type="button" class="btn" onclick="javascript:sendData()">&amp;nbsp;&amp;nbsp;送信&amp;nbsp;&amp;nbsp;&lt;/button>
+    &lt;/div>
+  &lt;/form>
+  &lt;h3>Byte length&lt;/h3>
+  &lt;p id="length" class="src">&lt;/p>
+  &lt;h3>Body&lt;/h3>
+  &lt;p id="body" class="src">&lt;/p>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p style="text-align:center;">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.15 /post_request_blob -->
+<h4 class="fs-5 mt-2"><a id="/post_request_blob">11.2.15 /post_request_blob</a></h4>
+<p>この例は、path で指定したテキストファイルをポストフェッチでリクエストを送り、 BLOB としてダウンロードして、その内容を表示する。</p>
+<pre class="border rounded p-1"><code># post_request_blob
+proc post_request_blob*(body: string): HandlerResult =
+  var status = Http200
+  var ret_headers = newHttpHeaders({"content-type": "text/plain; charset=utf-8"})
+  var args = medaka_procs.parseQuery(body)
+  echo args["path"]
+  let rstrm = newFileStream(args["path"], fmRead)
+  var content = rstrm.readAll()
+  rstrm.close()
+  return (status, content, ret_headers)</code></pre>
+<p>テンプレートファイル ./templates/</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>post_request_blob&lt;/title>
+ &lt;link rel="stylesheet" href="/css/style.css" />
+ &lt;script src="/js/JS365Lib.js">&lt;/script>
+ &lt;script>
+  function query() {
+    let path = getValue("path");
+    if (path == "")
+      alert("id is empty.");
+    else
+      if (path.startsWith('"'))
+        path = path.substring(1, path.length - 1)
+      path = path.replaceAll("\\", "/")
+      fetchBLOB("/post_request_blob", {"path":path}, "POST", "text", (data) => {
+          setValue("result", data);
+      });
+  }
+ &lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header>
+  &lt;h1 class="frame">post_request_blob&lt;/h1>
+   &lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="section">
+  &lt;form id="form1" name="form1" class="form">
+    &lt;div class="form-row">
+      &lt;label>path (Text file)&lt;br>&lt;input type="text" id="path" name="path" class="form-control" size="100">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;button type="button" class="btn" onclick="javascript:query()"> 送信 &lt;/button>
+    &lt;/div>
+  &lt;/form>
+  &lt;h3>Result&lt;/h3>
+  &lt;p id="result" style="font-size:small;">&lt;/p>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p style="text-align:center;">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.16 /session -->
+<h4 class="fs-5 mt-2"><a id="/session">11.2.16 /session</a></h4>
+<pre class="border rounded p-1"><code># session
+proc post_session*(filepath: string, body: string, headers: HttpHeaders): HandlerResult =
+  var args = newStringTable()
+  var cookies = getCookies(headers)
+  var jn:JsonNode = %* {}
+  var session = ""
+  if cookies.hasKey(SESSION_NAME):
+    session = decodeUrl(cookies[SESSION_NAME])
+    if session != "":
+      try:
+        jn = parseJson(session)
+      except:
+        jn = %* {}
+  if body != "":
+    var param = parseBody(body)
+    let name = param.getStValue("name")
+    let value = param.getStValue("value")
+    let remove = param.getStValue("remove")
+    if remove == "":
+      jn[name] = %value
+    else:
+      jn.delete(name)
+    session = encodeUrl($jn)
+  var ret_headers: HttpHeaders = htmlHeader()
+  ret_headers["Set-Cookie"] = SESSION_NAME & "=" & session
+  args["sessionList"] = decodeUrl(session)
+  let (status, content) = templateFile(filepath, args)
+  return (status, content, ret_headers)</code></pre>
+<p>テンプレートファイル ./templates/session.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html>
+ &lt;head>
+  &lt;meta charset="utf-8">
+  &lt;title>session&lt;/title>
+  &lt;link rel="stylesheet" href="/css/style.css">
+ &lt;/head>
+
+ &lt;body>
+  &lt;section class="section">
+   &lt;h1 class="frame">session&lt;/h1>
+   &lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+   &lt;br />
+   &lt;h4>Add/Remove session variables&lt;/h4>
+   &lt;form class="form" id="form1" name="form1" method="POST" action="/session">
+     &lt;div class="form-row">&lt;label>
+       &lt;input type="checkbox" name="remove" id="remove" value="remove" class="form-control"> remove
+     &lt;/label>&lt;/div>
+     &lt;div class="form-row">&lt;label>name&lt;br>
+       &lt;input type="text" name="name" id="name" class="form-control">
+     &lt;/label>&lt;/div>
+     &lt;div class="form-row">&lt;label>value&lt;br>
+       &lt;input type="text" name="value" id="value" size="50" class="form-control">
+     &lt;/label>&lt;/div>
+     &lt;div class="form-row">
+       &lt;button type="submit" id="execute" class="btn">&nbsp;&nbsp;Execute&nbsp;&nbsp;&lt;/button>
+     &lt;/div>
+   &lt;/form>
+   &lt;br>
+   &lt;div class="message" id="sessionList">{{sessionList}}&lt;/div>
+  &lt;/section>
+ &lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.17 /cookie_proc -->
+<h4 class="fs-5 mt-2"><a id="/cookie_proc">11.2.17 /cookie_proc</a></h4>
+<pre class="border rounded p-1"><code># /cookie_proc
+proc cookie_proc*(query:string): (string, HttpHeaders) =
+  var kv = parseQuery(query)
+  var name = kv["cpname"]
+  var value = kv["cpvalue"]
+  var ret_headers = textHeader()
+  ret_headers = setCookieValue(name, value, ret_headers)
+  var content = name & "=" & value
+  return (content, ret_headers)</code></pre>
+<p>ページファイル ./templates/cookie_proc.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>cookie_proc&lt;/title>
+ &lt;link rel="stylesheet" href="/css/style.css" />
+ &lt;script src="/js/JS365Lib.js">&lt;/script>
+ &lt;script>
+  function button1_click() {
+    let name1 = getValue("cpname");
+    let value1 = getValue("cpvalue");
+    fetchText("/cookie_proc", { "cpname":name1, "cpvalue":value1 }, "GET", (data) => {
+       setValue("message", data);
+    });
+  }
+ &lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="section">
+  &lt;h1>cookie_proc&lt;/h1>
+  &lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="section">
+  &lt;form class="form" name="form1">
+    &lt;div class="form-row">
+     &lt;label>name&lt;br>
+      &lt;input type="text" id="cpname" name="cpname" class="form-control" size="40">
+     &lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+     &lt;label>value&lt;br>
+      &lt;input type="text" id="cpvalue" name="cpvalue" class="form-control" size="80">
+     &lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+     &lt;label>
+      &lt;input type="checkbox" id="remove" name="remove" class="form-control"> remove
+     &lt;/label>
+    &lt;/div>
+    &lt;div class="form-row2">
+     &lt;button type="button" class="btn-b" id="button1" onclick="button1_click()"> Add / Update &lt;/button>
+    &lt;/div>
+  &lt;/form>
+  &lt;br>
+  &lt;div class="message" id="message">&lt;/div>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p style="text-align:center;">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.18 /session_proc -->
+<h4 class="fs-5 mt-2"><a id="/session_proc">11.2.18 /session_proc</a></h4>
+<pre class="border rounded p-1"><code># /session_proc
+proc session_proc*(query:string, headers:HttpHeaders): (string, HttpHeaders) =
+  var kv = parseQuery(query)
+  var ret_headers = newHttpHeaders()
+  if kv.hasKey("name") and kv.hasKey("value"):
+    var session = setSessionValue(kv["name"], kv["value"], headers)
+    ret_headers["Set-Cookie"] = SESSION_NAME & "=" & session.encodeUrl()
+    return (session, ret_headers)
+  else:
+    return ("{\"error\":\"no name\"}", ret_headers)</code></pre>
+<p>ページファイル ./templates/session_proc.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>session_proc&lt;/title>
+ &lt;link rel="stylesheet" href="/css/style.css" />
+ &lt;script src="/js/JS365Lib.js">&lt;/script>
+ &lt;script>
+  function button1_click() {
+    let name1 = getValue("name");
+    let value1 = getValue("value").replaceAll("+", "%2b");
+    fetchText("/session_proc", { "name":name1, "value":value1 }, "GET", (data) => {
+       let data1 = decodeURI(data)
+       let data2 = JSON.stringify(data1).replaceAll("\"", "").replaceAll("\\", "\"");
+       setValue("message", data2);
+    });
+  }
+ &lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="section">
+  &lt;h1>session_proc&lt;/h1>
+  &lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="section">
+  &lt;br>
+  &lt;form class="form" id="form1">
+   &lt;div class="form-row">
+    &lt;label>name&lt;br>
+     &lt;input type="text" id="name" class="form-control">
+    &lt;/label>
+   &lt;/div>
+   &lt;div class="form-row">
+    &lt;label>value&lt;br>
+     &lt;input type="text" id="value" size="80" class="form-control">
+    &lt;/label>
+   &lt;/div>
+   &lt;div class="form-row2">
+    &lt;button class="btn-b" type="button" id="button1" onclick="button1_click()"> Add / Update &lt;/button>
+   &lt;/div>
+  &lt;/form>
+  &lt;br>
+  &lt;p class="message" id="message">&lt;/p>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p style="text-align:center;">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+  &lt;p>&amp;nbsp;&lt;/p>
+ &lt;/footer>
+&lt;/body>
+&lt;/html>
+</code></pre>
+
+<!--  11.2.19 /medaka_db -->
+<h4 class="fs-5 mt-2"><a id="/medaka_db">11.2.19 /medaka_db (テーブルの内容一覧)</a></h4>
+<pre class="border rounded p-1"><code># /medaka_db
+proc medaka_db*(`template`: string): string =
+  var args = newStringTable()
+  let db = db_sqlite.open("./medaka.db", "", "", "")
+  var medaka_table = ""
+  for x in db.fastRows(sql"SELECT * FROM medaka"):
+    var row = ""
+    row = tr(td(x[0]) & td(x[1]) & td(x[2]) & td(x[3]) & td(x[4]))
+    medaka_table &= row
+  args["medaka_table"] = medaka_table
+  var nimble_table = ""
+  for x in db.fastRows(sql"SELECT * FROM nimble"):
+    var row = ""
+    row = tr(td(x[0]) & td(x[1]) & td(x[2]) & td(x[3]))
+    nimble_table &= row
+  args["nimble_table"] = nimble_table
+  let filepath = `template` & "/medaka_db.html"
+  return templateFile(filepath, args)[1]</code></pre>
+<p>テンプレートファイル ./templates/medaka_db.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>database_medaka&lt;/title>
+ &lt;!-- BootstrapのCSS読み込み -->
+ &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+ &lt;style>
+.bgcolor {
+    background-color: whitesmoke;
+    border-radius:6px;
+  }
+ &lt;/style>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header class="container">
+  &lt;h1 class="header-1 bgcolor text-center p-5">database_medaka&lt;/h1>
+  &lt;p class="text-center">&lt;a href="/index.html">HOME&lt;/a>&lt;/h1>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="container">
+   &lt;section class="row">
+    &lt;h2>medaka table&lt;/h2>
+    &lt;table class="table table-striped">
+     &lt;tr>&lt;th>id&lt;/th>&lt;th>path&lt;/th>&lt;th>methods&lt;/yh>&lt;th>query&lt;/th>&lt;th>info&lt;/th>&lt;/tr>
+     {{medaka_table}}
+    &lt;/table>
+   &lt;/section>
+   &lt;br>
+   &lt;section class="row">
+    &lt;h2>nimble table&lt;/h2>
+    &lt;table class="table table-striped">
+     &lt;tr>&lt;th>id&lt;/th>&lt;th>package&lt;/th>&lt;th>installed&lt;/th>&lt;th>info&lt;/th>&lt;/tr>
+      {{nimble_table}}
+    &lt;/table>
+   &lt;/section>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer class="container">
+  &lt;p class="text-center mt-4">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&nbsp;&lt;/p>
+ &lt;/footer>
+ &lt;!-- BootstrapのJS読み込み -->
+ &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js">&lt;/script>
+&lt;/body>
+&lt;/html>
+&lt;/code>&lt;/pre>
+
+&lt;/section>
+
+&lt;footer class="row mt-5 mb-5">
+  &lt;p class="text-center">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+&lt;/footer>
+&lt;/article>
+&lt;/body>
+&lt;/html>
+</code></pre>
+<p>&nbsp;</p>
+<p class="text-center"><a href="#top">TOP</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
