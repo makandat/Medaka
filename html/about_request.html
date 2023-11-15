@@ -87,14 +87,17 @@ GET メソッドの場合、クエリーデータの形式は常に application/
 <h3 class="mt-2">2.6 マルチパートフォームデータの詳細</h3>
 <p>マルチパートフォームデータは他のデータ形式より複雑である。</p>
 <!--   2.6.1 境界線の取得 -->
-<h4 class="fs-4">2.6.1 境界線の取得</h4>
+<h4 class="fs-3">2.6.1 境界線の取得</h4>
 <p>マルチパートフォームデータは境界線で分割されている。境界線はリクエストごとに異なり、またブラウザエンジンにより形式が異なる。</p>
 <p>境界線は<b>リクエストヘッダの content-type ヘッダ</b>で定義されている。ブラウザエンジンが Mozilla (Firefox) の場合は次のようになる。<p>
 <pre class="ms-5">content-type: multipart/form-data; boundary=---------------------------323530250721239011212765416286</pre>
 <p>一方、ブラウザエンジンが Webkit (Chrome など) の場合は次のようになる。</p>
 <pre class="ms-5">content-type: multipart/form-data; boundary=----WebKitFormBoundaryVinebUIzUE7i7Oy1</pre>
 <p>ただし、実際の境界線はこの内容より少し長く２つの '-' が追加される。つまり "------WebKitFormBoundaryVinebUIzUE7i7Oy1" などになる。</p>
-<h4 class="fs-4">2.6.2 ボディの内容</h4>
+<p>また、最後の境界線は '--' が最後に追加される。つまり、"------WebKitFormBoundaryVinebUIzUE7i7Oy1--" などになる。</p>
+
+<p>これは RFC 5322 で規定されているらしい。</p>
+<h4 class="fs-3">2.6.2 ボディの内容</h4>
 <p>次にマルチパートフォーム (あるいは FormData オブジェクト) のボディの例を示す。XXXX...XX はアップロードされたファイル内容で純粋なバイナリーデータである。</p>
 <p>Content-Disposition: form-data; name="title" などはフォームコントロールの name 属性の値である。</p>
 <p>Content-Type はアップロードされたファイルデータの形式で普通は、application/octet-stream である。これは純粋なバイナリーデータであることを意味する。</p>
