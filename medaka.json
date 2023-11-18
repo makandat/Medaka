@@ -2,5 +2,7 @@
   "html":"./html",
   "templates":"./templates",
   "upload":"./upload",
-  "cgi-bin":"./cgi-bin"
+  "cgi-bin":"./cgi-bin",
+  "port":"2024",
+  "localhost":"true"
 }

@@ -15,7 +15,7 @@
 <article class="container">
 <header>
  <!-- タイトル -->
- <h1 class="text-center p-5 bg-light rounded">Medaka HTTP サーバ v0.5</h1>
+ <h1 class="text-center p-5 bg-light rounded">Medaka HTTP サーバ v1.2</h1>
  <p class="text-center"><a href="/">HOME</a></p>
  <br>
  <!-- もくじ -->
@@ -102,6 +102,7 @@
      <li><a href="#/post_request_formdata">11.2.13 /post_request_formdata</a></li>
      <li><a href="#/post_request_arraybuffer">11.2.14 /post_request_arraybuffer</a></li>
      <li><a href="#/post_request_blob">11.2.15 /post_request_blob</a></li>
+     <li><a href="#/post_request_xml">11.2.15 /post_request_xml</a></li>
      <li><a href="#/session">11.2.16 /session</a></li>
      <li><a href="#/cookie_proc">11.2.17/cookie_proc</a></li>
      <li><a href="#/session_proc">11.2.18 /session_proc</a></li>
@@ -161,12 +162,14 @@
 <h2 class="mt-3"><a id="5 関連ファイル">5 関連ファイル</a></h2>
 <!--  5.1 設定ファイル -->
 <h3 class="mt-1"><a id="5.1 設定ファイル">5.1 設定ファイル</a></h3>
-<p>設定ファイルは medaka.json というファイルである。内容は次のようになっている。</p>
+<p>設定ファイルは medaka.json というファイルである。内容はデフォルトで次のようになっている。</p>
 <pre class="border rounded p-1"><code>{
   "html":"./html",
   "templates":"./templates",
   "upload":"./upload",
-  "cgi-bin":"./cgi-bin"
+  "cgi-bin":"./cgi-bin",
+  "port":"2024",
+  "localhost":"false"
 }
 </code></pre>
 <p>(注意) ポート番号、ログファイル名、設定ファイル名はソースを変更しないと変更できない。</p>
@@ -175,6 +178,8 @@
  <li>templates はテンプレートファイルの場所である。</li>
  <li>upload はアップロードファイルの保存先である。</li>
  <li>cgi-bin は CGI ファイルの場所である。</li>
+ <li>port は使用するポート番号である。</li>
+ <li>localhost は "true" の場合、http://localhost:port からのみのアクセスに反応する。"false" の場合は、その他のホストからのアクセスも有効になる。</li>
 </ul>
 
 <!--  5.2 ログファイル -->
@@ -1871,7 +1876,7 @@ proc post_request_blob*(body: string): HandlerResult =
   var content = rstrm.readAll()
   rstrm.close()
   return (status, content, ret_headers)</code></pre>
-<p>テンプレートファイル ./templates/</p>
+<p>HTML ファイル ./html/post_request_blob.html</p>
 <pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
 &lt;html lang="ja">
 &lt;head>
@@ -1928,8 +1933,96 @@ proc post_request_blob*(body: string): HandlerResult =
 &lt;/html>
 </code></pre>
 
-<!--  11.2.16 /session -->
-<h4 class="fs-5 mt-2"><a id="/session">11.2.16 /session</a></h4>
+
+<!--  11.2.16 /post_request_xml -->
+<h4 class="fs-5 mt-2"><a id="/post_request_xml">11.2.16 /post_request_xml</a></h4>
+<pre class="border rounded p-1"><code># post_request_xml
+proc post_request_xml*(body: string, headers: HttpHeaders): HandlerResult =
+  if headers["content-type"] == "application/xml":
+    var hs = ""
+    for k, v in headers:
+      hs &= k
+      hs &= ": "
+      for w in v:
+        hs &= w
+      hs &= "\n"
+    var xn:XmlNode = parseXml(body)
+    var s = ""
+    for item in xn.items:
+      s.add('"' & item.tag & '"' & ':' & '"' & item.innerText() & '"' & ',')
+    s = '{' & s.substr(0, len(s)-2) & '}'
+    var content = %* {"headers":hs, "body":body, "result":s}
+    return (Http200, $content, jsonHeader())
+  else:
+    raise</code></pre>
+<p>HTML ファイル ./html/post_request_xml.html</p>
+<pre class="border rounded p-1"><code>&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+ &lt;meta charset="utf-8" />
+ &lt;meta name="viewport" content="width=device-width,initial-scale=1" />
+ &lt;title>post_request_xml&lt;/title>
+ &lt;link rel="stylesheet" href="/css/style.css" />
+ &lt;script src="/js/JS365Lib.js">&lt;/script>
+ &lt;script>
+  function sendXml() {
+    const id = getValue("id");
+    if (id == "")
+      alert("id is empty.");
+    else {
+      const name = getValue("name");
+      let xmldata = `&lt;data>&lt;id>${id}&lt;/id>&lt;name>${name}&lt;/name>&lt;/data>`;
+      postXml("/post_request_xml", xmldata, (data) => {
+          setValue("headers", data["headers"]);
+          setValue("body", data["body"]);
+          setValue("result", data["result"]);
+      });
+    }
+  }
+ &lt;/script>
+&lt;/head>
+
+&lt;body>
+ &lt;!-- ヘッダー -->
+ &lt;header>
+  &lt;h1 class="frame">post_request_xml&lt;/h1>
+   &lt;p style="text-align:center;">&lt;a href="/">HOME&lt;/a>&lt;/p>
+ &lt;/header>
+
+ &lt;!-- 本文 -->
+ &lt;article class="section">
+  &lt;form id="form1" class="form">
+    &lt;div class="form-row">
+      &lt;label>id&lt;br>&lt;input type="number" id="id" class="form-control">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;label>name&lt;br>&lt;input type="name" id="name" size="60" class="form-control">&lt;/label>
+    &lt;/div>
+    &lt;div class="form-row">
+      &lt;button type="button" class="btn" onclick="javascript:sendXml()">送信&lt;/button>
+    &lt;/div>
+  &lt;/form>
+  &lt;h3>Headers&lt;/h3>
+  &lt;pre id="headers" class="src">&lt;/pre>
+  &lt;h3>Body&lt;/h3>
+  &lt;p id="body" class="src">&lt;/p>
+  &lt;h3>Result&lt;/h3>
+  &lt;p id="result" class="message">&lt;/p>
+ &lt;/article>
+
+ &lt;!-- フッター -->
+ &lt;footer>
+  &lt;p>&nbsp;&lt;/p>
+  &lt;p style="text-align:center;">&lt;a href="#top">TOP&lt;/a>&lt;/p>
+  &lt;p>&nbsp;&lt;/p>
+  &lt;p>&nbsp;&lt;/p>
+ &lt;/footer>
+&lt;/body>
+&lt;/html></code></pre>
+
+
+<!--  11.2.17 /session -->
+<h4 class="fs-5 mt-2"><a id="/session">11.2.17 /session</a></h4>
 <pre class="border rounded p-1"><code># session
 proc post_session*(filepath: string, body: string, headers: HttpHeaders): HandlerResult =
   var args = newStringTable()
@@ -1994,8 +2087,8 @@ proc post_session*(filepath: string, body: string, headers: HttpHeaders): Handle
 &lt;/html>
 </code></pre>
 
-<!--  11.2.17 /cookie_proc -->
-<h4 class="fs-5 mt-2"><a id="/cookie_proc">11.2.17 /cookie_proc</a></h4>
+<!--  11.2.18 /cookie_proc -->
+<h4 class="fs-5 mt-2"><a id="/cookie_proc">11.2.18 /cookie_proc</a></h4>
 <pre class="border rounded p-1"><code># /cookie_proc
 proc cookie_proc*(query:string): (string, HttpHeaders) =
   var kv = parseQuery(query)
@@ -2069,8 +2162,8 @@ proc cookie_proc*(query:string): (string, HttpHeaders) =
 &lt;/html>
 </code></pre>
 
-<!--  11.2.18 /session_proc -->
-<h4 class="fs-5 mt-2"><a id="/session_proc">11.2.18 /session_proc</a></h4>
+<!--  11.2.19 /session_proc -->
+<h4 class="fs-5 mt-2"><a id="/session_proc">11.2.19 /session_proc</a></h4>
 <pre class="border rounded p-1"><code># /session_proc
 proc session_proc*(query:string, headers:HttpHeaders): (string, HttpHeaders) =
   var kv = parseQuery(query)
@@ -2143,8 +2236,8 @@ proc session_proc*(query:string, headers:HttpHeaders): (string, HttpHeaders) =
 &lt;/html>
 </code></pre>
 
-<!--  11.2.19 /medaka_db -->
-<h4 class="fs-5 mt-2"><a id="/medaka_db">11.2.19 /medaka_db (テーブルの内容一覧)</a></h4>
+<!--  11.2.20 /medaka_db -->
+<h4 class="fs-5 mt-2"><a id="/medaka_db">11.2.20 /medaka_db (テーブルの内容一覧)</a></h4>
 <pre class="border rounded p-1"><code># /medaka_db
 proc medaka_db*(`template`: string): string =
   var args = newStringTable()
@@ -2226,7 +2319,14 @@ proc medaka_db*(`template`: string): string =
 &lt;/body>
 &lt;/html>
 </code></pre>
+</section>
+
+<!-- footer -->
+<footer>
 <p>&nbsp;</p>
 <p class="text-center"><a href="#top">TOP</a></p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
+</footer>
+</body>
+</html>

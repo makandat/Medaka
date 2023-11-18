@@ -4,7 +4,7 @@ import std/asyncdispatch
 import std/[files, paths, strtabs, json, mimetypes, strutils, strformat, logging, re]
 import handlers, medaka_procs
 
-const VERSION = "1.0.0"
+const VERSION = "1.2.0"
 const USE_PORT:uint16 = 2024
 const CONFIG_FILE = "medaka.json"
 const LOG_FILE = "medaka.log"
@@ -49,6 +49,9 @@ proc callback(req: Request) {.async.} =
   var content = ""
   var headers = newHttpHeaders({"Content-Type":"text/html; charset=utf-8"})
   let settings = readSettings()
+  if settings.haskey("localhost"):
+    if settings["localhost"] == "true" and not (req.hostname.startsWith("localhost") or req.hostname.startsWith("127.0.0.1")) :
+      return;
   var filepath = ""
   let htdocs = settings["html"]
   let templates = settings["templates"]
@@ -135,6 +138,9 @@ proc callback(req: Request) {.async.} =
   # POST /post_request_blob
   elif req.reqMethod == HttpPost and req.url.path == "/post_request_blob":
     (status, content, headers) = handlers.post_request_blob(req.body)
+  # POST /post_request_xml
+  elif req.reqMethod == HttpPost and req.url.path == "/post_request_xml":
+    (status, content, headers) = handlers.post_request_xml(req.body, req.headers)
   #  /redirect
   elif req.url.path == "/redirect":
     filepath = templates & "/redirect.html"
@@ -183,7 +189,7 @@ proc callback(req: Request) {.async.} =
     headers = jsonHeader()
     (content, headers) = handlers.session_proc(req.url.query, req.headers)
   # /sendfile
-  elif req.url.path == "/sendfile":
+  elif req.reqMethod == HttpGet and req.url.path == "/sendfile":
     var kv = parseQuery(req.url.query)
     let filepath = kv["path"]
     (status, content, headers) = medaka_procs.sendfile(filepath)
@@ -201,9 +207,13 @@ proc callback(req: Request) {.async.} =
 #  =============
 when isMainModule:
   initLogger()
-  var server = newAsyncHttpServer()
-  server.listen(Port(USE_PORT))
-  echo START_MSG & "\n URL: http://localhost:" & $USE_PORT
+  let server = newAsyncHttpServer()
+  var port = USE_PORT.uint16
+  let settings = readSettings()
+  if settings.haskey("port"):
+    port = parseInt(settings["port"]).uint16
+  server.listen(Port(port))
+  echo START_MSG & "\n URL: http://localhost:" & $port
   info START_MSG
   while true:
     if server.shouldAcceptRequest():
